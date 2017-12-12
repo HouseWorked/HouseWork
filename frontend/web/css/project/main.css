@@ -1,0 +1,80 @@
+/**
+ * Работа с календарем
+ -----------------------------*/
+.fullcalendar .fc-content .fc-time{ /*Убираем время с календаря*/
+    display: none;
+}
+.fullcalendar .fc-day:hover{ /* Эффект при наведении на задачу  */
+    background: grey;
+}
+/*виды задач*/
+.fullcalendar .ok{ /*Выполненая задача*/
+    background: grey;
+}
+.fullcalendar .overdue {/*Просроченная задача*/
+    background: yellow;
+}
+.fullcalendar .danger{/*Важная задача*/
+    background: red;
+}
+.fullcalendar .general{/*Общая задача*/
+    background: blue;
+}
+.fullcalendar .usual{/*Обычная задача задача*/
+    background: #85ff9f;
+}
+.fullcalendar .fc-time-grid .fc-event{ /* Эта строчка отвечает за правильно отображение задач на странице 'неделя' и "день" */
+    position: inherit;
+}
+/*                end             */
+/************************************/
+
+
+/*Разберись с этим пжлст. Ненужное убери))*/
+#qw li{
+    display: inline-block;
+    margin: 0 1px -30px 0;
+}
+ul li img{
+    width: 20px;
+    height: 20px;
+}
+ul li img:hover{
+    cursor: pointer;
+}
+.clockpicker {
+    width: 50%;
+    margin-bottom: 20px;
+    float: left;
+}
+.js-example-basic-single span{
+    display: block;
+}
+.fc-content{
+    text-align: center;
+}
+.overdue .fc-event-dot{
+    background: yellow;
+}
+.complete .fc-event-dot{
+    background: grey;
+}
+.complete .fc-title{
+    text-decoration: line-through;
+}
+.complete .fc-list-item-title a{
+    text-decoration: line-through;
+}
+.info{
+    border: 2px solid #dddddd;
+    border-radius: 3px;
+    background: #3d4148;
+    padding: 10px;
+    color: #979a9f;
+}
+.time_picker ul li{
+    width: 200px;
+    margin-bottom: 10px;
+    list-style: none;
+    float: left;
+}
