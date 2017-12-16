@@ -11,7 +11,6 @@ $(document).ready(function(){
     $(".container_windows").draggable({
         containment: 'parent',
         cancel: '.text_windows_content'
-
     });
     // $(".container_windows").resizable();
 
@@ -27,6 +26,13 @@ $(window).on('load', function () {
         $svg_anm   = $preloader.find('.svg_anm');
     $svg_anm.fadeOut();
     $preloader.delay(500).fadeOut('slow');
+});
+$(document).on('load', '.text_windows_content', function () {
+    // var $preloader = $('#p_prldr'),
+    //     $svg_anm   = $preloader.find('.svg_anm');
+    // $svg_anm.fadeOut();
+    // $preloader.delay(500).fadeOut('slow');
+    console.log('load content');
 });
 
 $(window).resize(function(){

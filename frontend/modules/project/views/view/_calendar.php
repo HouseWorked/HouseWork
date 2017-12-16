@@ -6,7 +6,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
-
+\frontend\assets\ProjectAsset::register($this);
 ?>
 <?php
 echo FullCalendar::widget([
@@ -18,15 +18,14 @@ echo FullCalendar::widget([
             'center' => 'title',
             'right' => 'month, basicWeek, basicDay,'
         ],
+        'events' => $events,
+        'id' => 'calendar',
         'draggable' => true,
-        'droppable' => true,
         'selectable' => true,
         'selectHelper' => true,
         'unselectAuto' => true,
-        'disableResizing' => true,
         'editable' => true,
-        'events' => $events,
-        'id' => 'calendar',
+        'droppable' => true,
         'select' => new \yii\web\JsExpression("function (start, end, allDay) { // добавление задачи
                 var dateStart = new Date(start._d);
                 var dateEnds = new Date(end._d);
@@ -43,17 +42,35 @@ echo FullCalendar::widget([
             }"),
         'eventClick' => new \yii\web\JsExpression(' //редактирование задачи
                 function(event) {
-                   $(\'#overlay\').fadeIn(400,
+                    var eve = event;
+                    console.log(eve);
+                    $("#title_task_edit").focusout(function(){
+                       console.log(eve+" - this events");
+                    });
+                    $(\'#overlay\').fadeIn(400,
                     function(){
                         $(\'#modal_form_edit\')
                             .css(\'display\', \'block\')
                             .animate({opacity: 1, top: 0, right: 0}, 200);
-                    });
-                    console.log(event);
+                    });                   
                     $("input[name=\'task_id\']").val(event.id);   // получаем id редактируемой задачи    
                     $("input[name=\'title_task_edit\']").val(event.title);   // получаем id редактируемой задачи    
-                    $("input[name=\'desc_task_edit\']").val(event.desc);   // получаем id редактируемой задачи    
-                                 $.ajax({
+                    $("input[name=\'desc_task_edit\']").val(event.desc);   // получаем id редактируемой задачи  
+                    
+                    
+                    var dateS = new Date(event.start._i);
+                    var dateE = new Date(event.end._i);
+                    var full_date_start = dateS.getDate()+"."+(dateE.getMonth() + 1)+"."+dateS.getFullYear();
+                    var full_date_end = dateE.getDate()+"."+(dateE.getMonth() + 1)+"."+dateE.getFullYear();
+               
+                    if(full_date_start == full_date_end){
+                        $("#db_date").html(full_date_start);                     
+                    }else{
+                        var full_date_start1 = dateS.getDate()+"."+dateE.getMonth()+"."+dateS.getFullYear();
+                        var full_date_end1 = (dateE.getDate() - 1)+"."+(dateE.getMonth() + 1)+"."+dateE.getFullYear();
+                        $("#db_date").html(full_date_start1+" - "+full_date_end1);                       
+                    }
+                    $.ajax({
                         url: "project/view/task?type=modal",
                         type: "post",
                         dataType: "JSON",
@@ -64,10 +81,13 @@ echo FullCalendar::widget([
                             switch(data.status){
                                 case "success":
                                     $(".comment_container").html(data.content);
+                                    $("input[name=\'id\']").val(data.id);
                                     break;
                             }
-                        }
+                        }                  
                     });
+                    $(\'input[name="new_start_date"]\').val(event.start._i);
+                    $(\'input[name="new_ends_date"]\').val(event.end._i);                                    
                 }
             ')
     ],
@@ -126,7 +146,6 @@ echo FullCalendar::widget([
         </div>
         <input type="text" name="starts" value="">
         <input type="text" name="ends" value="">
-        <input type="text" name="id" value="">
         <?php ActiveForm::end(); ?>
     </div>
 </div>
@@ -135,12 +154,72 @@ echo FullCalendar::widget([
     <span id="modal_close_edit" style="display: none">X</span> <!-- Кнoпкa зaкрыть -->
     <?php $form = ActiveForm::begin(); ?>
     <div class="head">
-        <span>Дата</span>
+        <input type="text" name="daterange" value="01/01/2015 1:30 PM - 01/01/2015 2:00 PM" id="daterange_edit"/>
+        <input type="hidden" value="" name="new_start_date">
+        <input type="hidden" value="" name="new_ends_date">
+        <input type="hidden" value="" name="id">
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $('input[name="daterange"]').daterangepicker({
+                    "showWeekNumbers": true,
+                    "timePicker": true,
+                    "timePicker24Hour": true,
+                    "locale": {
+                        "format": "DD.MM.YYYY",
+                        "separator": " - ",
+                        "applyLabel": "Выбрать",
+                        "cancelLabel": "Отмена",
+                        "fromLabel": "From",
+                        "toLabel": "To",
+                        "timePickerIncrement": 5,
+                        "customRangeLabel": "Custom",
+                        "weekLabel": "W",
+                        "daysOfWeek": [
+                            "Вс",
+                            "Пн",
+                            "Вт",
+                            "Ср",
+                            "Чт",
+                            "Пт",
+                            "Сб"
+                        ],
+                        "monthNames": [
+                            "Январь",
+                            "Февраль",
+                            "Март",
+                            "Апрель",
+                            "Май",
+                            "Июнь",
+                            "Июль",
+                            "Август",
+                            "Сентябрь",
+                            "Октябрь",
+                            "Ноябрь",
+                            "Декабрь"
+                        ],
+                        "firstDay": 1
+                    },
+                    "startDate": "12/06/2017",
+                    "endDate": "12/12/2017",
+                    "opens": "left"
+                }, function(start , end, label) {
+                    var hourse_left = ($('.left').find('.hourselect').val() < 10) ? "0"+$('.left').find('.hourselect').val() : $('.left').find('.hourselect').val();
+                    var hourse_right = ($('.right').find('.hourselect').val() < 10) ? "0"+$('.right').find('.hourselect').val() : $('.right').find('.hourselect').val();
+                    var minute_left = ($('.left').find('.minuteselect').val() < 10) ? "0"+$('.left').find('.minuteselect').val() : $('.left').find('.minuteselect').val();
+                    var minute_right = ($('.right').find('.minuteselect').val() < 10) ? "0"+$('.right').find('.minuteselect').val() : $('.right').find('.minuteselect').val();
+                    var new_start_date = start.format('YYYY-MM-DD') + " " + hourse_left + ":" + minute_left + ":" + "00";
+                    var new_ends_date = end.format('YYYY-MM-DD') + " " + hourse_right + ":" + minute_right + ":" + "00";
+                    $('input[name="new_start_date"]').val(new_start_date);
+                    $('input[name="new_ends_date"]').val(new_ends_date);
+                });
+
+            });
+        </script>
         <span style="float: right">
-            <select name="" id="">
-                <option value="">Важная</option>
-                <option value="">Обычная</option>
-                <option value="">Общая</option>
+            <select name="importance" id="importance_edit">
+                <option value="danger">Важная</option>
+                <option value="usual">Обычная</option>
+                <option value="general">Общая</option>
             </select>
         </span>
     </div>
@@ -177,8 +256,8 @@ echo FullCalendar::widget([
         </span>
     </div>
     <div class="container">
-        <input type="text" value="Название задачи" name="title_task_edit">
-        <input type="text" value="Описание задачи" name="desc_task_edit">
+        <input type="text" value="Название задачи" name="title_task_edit" id="title_task_edit">
+        <input type="text" value="Описание задачи" name="desc_task_edit" id="desc_task_edit">
     </div>
     <div class="comment">
         <div class="comment_container">
@@ -187,15 +266,10 @@ echo FullCalendar::widget([
         <input type="button"  id="send_comment_task_text" value="send">
         <div class="comment_create_block">
             <img src="" alt="Фото текущего юзера">
-
             <textarea name="commetn_task_text" id="comment_task_text" cols="30" rows="10" placeholder="Ваш комментарий"></textarea>
-
         </div>
         <input type="hidden" name="task_id">
     </div>
     <?php ActiveForm::end(); ?>
 </div>
 <div id="overlay"></div><!-- Пoдлoжкa -->
-<style>
-
-</style>

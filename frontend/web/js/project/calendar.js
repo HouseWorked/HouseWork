@@ -1,3 +1,4 @@
+$(document).off('click', '#modal_close, #overlay');
 $(document).on('click', '#modal_close, #overlay', function(){ //закрытие модалки добавления новой задачи
     $('#modal_form')
         .animate({opacity: 0, top: '45%'}, 200,
@@ -11,25 +12,36 @@ $(document).on('click', '#modal_close, #overlay', function(){ //закрытие
             function(){ // пoсле aнимaции
                 $(this).css('display', 'none');
                 $('#overlay').fadeOut(400);
+                console.log($('#title_task_edit').val());
+                $.ajax({
+                    url: 'project/view/task?type=edit',
+                    dataType: 'json',
+                    data: ({
+                        'id': $('input[name="id"]').val(),
+                        'title': $('input[name="title_task_edit"]').val(),
+                        'desc': $('input[name="desc_task_edit"]').val(),
+                        'newStart': $('input[name="new_start_date"]').val(),
+                        'newEnds': $('input[name="new_ends_date"]').val(),
+                        'importance': $('select[name="importance"]').val()
+                    }),
+                    type: 'POST',
+                    success: function(data){
+                        switch(data.status){
+                            case 'success':
+                                $('.text_windows_content').html(data.content); // Обновление календаря
+                                break;
+                        }
+                    }
+                });
             }
         );
 });
-// $(document).on('click', '#overlay', function(){ //закрытие модалки редактирвоание
-//     $('#modal_form_edit')
-//         .animate({opacity: 0, top: '0', right: '-10%'}, 200,
-//             function(){ // пoсле aнимaции
-//                 $(this).css('display', 'none');
-//                 $('#overlay').fadeOut(400);
-//             }
-//         );
-// });
 // new task
 $(document).off('click', '.new_task'); // убираем двойной клик
 $(document).on('click', '.new_task', function(e){
     e.preventDefault();
     var date_start = $('input[name="starts"]').val();
     var date_ends = $('input[name="ends"]').val();
-
     var performer = $('select[name="Task[user_id]"]').val();
     var title = $('#task-title_task').val();
     var desc = $('#task-description').val();
@@ -51,8 +63,7 @@ $(document).on('click', '.new_task', function(e){
         success: function(data){
             switch(data.status){
                 case 'success':
-                    $('.text_windows_content').html(data.content);
-                    // $('input[name="id"]').val(data.lastEventsID);
+                    $('.text_windows_content').html(data.content);// Обновление календаря
                     break;
             }
         }
@@ -62,7 +73,6 @@ $(document).on('click', '.new_task', function(e){
 $(document).off('click', '#send_comment_task_text'); // убираем двойной клик
 $(document).on('click', '#send_comment_task_text', function(e){
     e.preventDefault();
-
     $.ajax({
         url: 'project/view/task?type=send',
         dataType: 'json',
@@ -74,8 +84,7 @@ $(document).on('click', '#send_comment_task_text', function(e){
         success: function(data){
             switch(data.status){
                 case 'success':
-                    console.log(data.content);
-                    $(".comment_container").after(data.content);
+                    $(".comment_container").after(data.content);// Обновление комментариев
                     break;
             }
         }

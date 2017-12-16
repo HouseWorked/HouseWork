@@ -74,6 +74,7 @@ class ViewController extends Controller
                     $model->type = yii::$app->request->post('importance');
                     $model->user_id = yii::$app->request->post('performer');
                     $model->creator_id = yii::$app->user->id;
+                    $model->status = 0;
                     $model->save();
                     break;
                 case 'send': //Отправка комментария
@@ -99,15 +100,27 @@ class ViewController extends Controller
                     }
                     break;
                 case 'modal': // Добавление в модальное окно комментариев
-                    $comments = Comment::find()->where(['task_id' => yii::$app->request->post('task_id')])->all();
+                    $id = yii::$app->request->post('task_id');
+                    $comments = Comment::find()->where(['task_id' => $id])->all();
+                    $task = Task::find()->where(['id' => $id])->one();
                     return  json_encode([
                         'status' => 'success',
+                        'id' => $id,
                         'content' => $this->renderAjax('include/modal', [
                             'comments' => $comments,
-                            'type' => 'all'
+                            'type' => 'all',
                         ])
                     ]);
-
+                    break;
+                case 'edit': // Редактирование задачи
+                    $id = yii::$app->request->post('id');
+                    $task = Task::find()->where(['id' => $id])->one();
+                    $task->start = yii::$app->request->post('newStart');
+                    $task->ends = yii::$app->request->post('newEnds');
+                    $task->type = yii::$app->request->post('importance');
+                    $task->title_task = yii::$app->request->post('title');
+                    $task->description = yii::$app->request->post('desc');
+                    $task->save();
                     break;
             }
         }

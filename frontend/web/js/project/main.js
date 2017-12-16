@@ -1,6 +1,3 @@
-$(document).ready(function(){
-
-});
 // Открытие в главном окне
 $(document).on('click', '.controller', function(){
     var type = $(this).data('type');
