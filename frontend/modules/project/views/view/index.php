@@ -7,21 +7,9 @@
         <div class="links view_project" data-type="tech"><a href="#">ТЗ</a></div>
         <div class="links view_project" data-type="settings"><a href="#">Настройки</a></div>
         <div class="links view_project" data-type="task"><a href="#">Задачи</a></div>
-<!--        <li>-->
-<!--            <div class="link"><i class="fa fa-database"></i>Анализ сайта<i class="fa fa-chevron-down"></i></div>-->
-<!--            <ul class="submenu">-->
-<!--                <li class="controller" data-type="counter"><a href="#">Подключение счетчиков</a></li>-->
-<!--                <li class="controller" data-type="ssl"><a href="#">Подключение SSL</a></li>-->
-<!--            </ul>-->
-<!--        </li>-->
-<!--        <li>-->
-<!--            <div class="link"><i class="fa fa-code"></i>Команда проекта<i class="fa fa-chevron-down"></i></div>-->
-<!--            <ul class="submenu">-->
-<!--                <li class="controller" data-type="teem"><a href="#">Команда</a></li>-->
-<!--                <li class="controller" data-type="task"><a href="#">Задачи</a></li>-->
-<!--            </ul>-->
-<!--        </li>-->
+        <div class="links view_project" data-type="errors"><a href="#">Лог ошибок</a></div>
     </ul>
+    <input type="hidden" value="<?= $id ?>" name="main_project_id">
     <div class="text_windows_content">
 
     </div>
@@ -50,7 +38,6 @@
                 $el.find('.submenu').not($next).slideUp().parent().removeClass('open');
             };
         };
-
         var accordion = new Accordion($('#accordion'), false);
     });
 </script>

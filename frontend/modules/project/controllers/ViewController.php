@@ -3,10 +3,12 @@
 namespace app\modules\project\controllers;
 
 use app\models\Project;
+use app\models\ProjectTeem;
 use app\models\Task;
 use app\models\User;
 use app\models\Comment;
 use app\models\Teem;
+use app\models\Domains;
 use yii;
 use yii\web\Controller;
 use yii\helpers\StringHelper;
@@ -16,11 +18,11 @@ use yii\helpers\StringHelper;
  */
 class ViewController extends Controller
 {
-    public function actionIndex()
+    public function actionIndex($id)
     {
         return json_encode([
             'status' => 'success',
-            'page' => $this->renderAjax('index'),
+            'page' => $this->renderAjax('index', compact('id')),
         ]);
     }
     public function actionView($type = ''){
@@ -52,10 +54,10 @@ class ViewController extends Controller
     // ОКНА ПОДРОБНОЙ ИНФОРМАЦИИ
     public function actionTask($type = null){ // задачи
         $model = new Task();
-        $teem = User::find()->where(['id' => yii::$app->user->id])->one();
-        $user = User::find()->where(['teem_id' => $teem->teem->id])->all();
 
         // Массив с исполнителям
+        $teem = User::find()->where(['id' => yii::$app->user->id])->one();
+        $user = User::find()->where(['teem_id' => $teem->teem->id])->all();
         foreach ($user as $index => $item) {
             $performer[] = [
                 'id' => $item->id,
@@ -74,6 +76,7 @@ class ViewController extends Controller
                     $model->type = yii::$app->request->post('importance');
                     $model->user_id = yii::$app->request->post('performer');
                     $model->creator_id = yii::$app->user->id;
+                    $model->project_id = yii::$app->request->post('id');
                     $model->status = 0;
                     $model->save();
                     break;
@@ -113,7 +116,7 @@ class ViewController extends Controller
                     ]);
                     break;
                 case 'edit': // Редактирование задачи
-                    $id = yii::$app->request->post('id');
+                    $id = yii::$app->request->post('id_project');
                     $task = Task::find()->where(['id' => $id])->one();
                     $task->start = yii::$app->request->post('newStart');
                     $task->ends = yii::$app->request->post('newEnds');
@@ -125,10 +128,9 @@ class ViewController extends Controller
             }
         }
         // получение задач
-        $tasks = Task::find()->all();
+        $tasks = Task::find()->where(['project_id' => yii::$app->request->post('id')])->all();
         $events = [];
         foreach ($tasks AS $task){
-
             $start = date('Y-m-d', strtotime($task->start));
             $ends = date('Y-m-d', strtotime($task->ends));
             $current = date("Y-m-d");
@@ -158,9 +160,26 @@ class ViewController extends Controller
         ]);
     }
     public function actionSettings(){
+        $modelDomains = Domains::find() // Все свободные домены
+            ->where(['project_id' => null])
+            ->all();
+        $modelDomainValue = Domains::find() // Домен, закрепленный за проектом
+            ->where(['project_id' => yii::$app->request->post('id')])
+            ->one();
+        $modelMain = Project::find()->where(['id' =>  yii::$app->request->post('id')])->one(); // Данные проекта
+        foreach ($modelDomains as $index => $modelDomain) {
+            $domains[] = [
+                'id' => $modelDomain->id,
+                'title' => $modelDomain->title,
+            ];
+        }
         return  json_encode([
             'status' => 'success',
-            'content' => $this->renderAjax('_settings')
+            'content' => $this->renderAjax('_settings', [
+                'modelDomains' => $domains,
+                'modelMain' => $modelMain,
+                'currentDomain' => $modelDomainValue
+            ])
         ]);
     }
     public function actionTech(){
@@ -169,10 +188,58 @@ class ViewController extends Controller
             'content' => $this->renderAjax('_tech')
         ]);
     }
-    public function actionTeem(){
+    public function actionErrors(){
         return  json_encode([
             'status' => 'success',
-            'content' => $this->renderAjax('_teem')
+            'content' => $this->renderAjax('_errors')
+        ]);
+    }
+    public function actionTeem(){
+        // Массив с исполнителям
+        $model = new User();
+        $teem = User::find()->where(['id' => yii::$app->user->id])->one();
+        $user = User::find()->where(['teem_id' => $teem->teem->id])->all();
+        foreach ($user as $index => $item) {
+            $test = ProjectTeem::find()
+                ->where(['user_id' => $item->id])
+                ->andWhere(['project_id' => yii::$app->request->post('id')])
+                ->one();
+            if(!$test){
+                $performer[] = [
+                    'id' => $item->id,
+                    'username' => $item->username,
+                    'group' => $item->prof->title
+                ];
+            }
+        }
+
+        // Проекты
+        $project = ProjectTeem::find()->where(['project_id' => yii::$app->request->post('id')])->all();
+        return  json_encode([
+            'status' => 'success',
+            'content' => $this->renderAjax('_teem', [
+                'teem_select' => $performer,
+                'model' => $model,
+                'teems' => $user,
+                'projects' => $project
+            ])
+        ]);
+    }
+
+    // AJAX запросы
+    public function actionTeemUserInfo(){
+        $projects = ProjectTeem::find()
+            ->where(['user_id' => yii::$app->request->post('id_user')])
+            ->all();
+        $user = ProjectTeem::find()
+            ->where(['user_id' => yii::$app->request->post('id_user')])
+            ->one();
+        return json_encode([
+            'status' => 'success',
+            'content' => $this->renderAjax('include/modal_info_user', [
+                'projects' => $projects,
+                'users' => $user
+            ])
         ]);
     }
 }

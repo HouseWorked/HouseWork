@@ -2,4 +2,4 @@
 
 \frontend\assets\ProjectAsset::register($this);
 ?>
-ТЗ
+Лог ошибок

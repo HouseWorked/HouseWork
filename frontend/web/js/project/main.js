@@ -1,4 +1,4 @@
-// Открытие в главном окне
+/// / Открытие в главном окне
 $(document).on('click', '.controller', function(){
     var type = $(this).data('type');
     $.ajax({
@@ -36,7 +36,7 @@ $(document).on('click', '.project', function(){
         }
     });
 });
-// Открытие окон в части подробной информации
+// Открытие окон в части c подробной информации
 $(document).off('click', '.view_project');
 $(document).on('click', '.view_project', function(){
     var id = $(this).attr('id');
@@ -45,6 +45,9 @@ $(document).on('click', '.view_project', function(){
         url: 'project/view/'+type,
         type: 'POST',
         dataType: 'JSON',
+        data: ({
+            'id': $('input[name="main_project_id"]').val()
+        }),
         success: function(data){
             switch(data.status){
                 case 'success':

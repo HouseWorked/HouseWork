@@ -6,7 +6,6 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
-\frontend\assets\ProjectAsset::register($this);
 ?>
 <?php
 echo FullCalendar::widget([
@@ -109,7 +108,6 @@ echo FullCalendar::widget([
                 'options' => ['placeholder' => 'Выбирете исполнителя ...', ],
                 'pluginOptions' => [
                     'allowClear' => true,
-
             ],
         ])->label(false);?>
         <?= $form->field($model, 'title_task')->textInput(['placeholder' => 'Название задачи'])->label(false); ?>
@@ -158,6 +156,10 @@ echo FullCalendar::widget([
         <input type="hidden" value="" name="new_start_date">
         <input type="hidden" value="" name="new_ends_date">
         <input type="hidden" value="" name="id">
+        <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+        <!-- Include Date Range Picker -->
+        <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
+        <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
         <script type="text/javascript">
             $(document).ready(function(){
                 $('input[name="daterange"]').daterangepicker({

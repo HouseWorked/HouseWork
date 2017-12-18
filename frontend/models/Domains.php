@@ -5,13 +5,15 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "pr_project".
+ * This is the model class for table "pr_domains".
  *
  * @property integer $id
  * @property string $title
- * @property string $date_start
+ * @property integer $project_id
+ *
+ * @property PrProject $project
  */
-class Project extends \yii\db\ActiveRecord
+class Domains extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
@@ -23,7 +25,7 @@ class Project extends \yii\db\ActiveRecord
     public $project_responsible_form_company;
     public static function tableName()
     {
-        return 'pr_project';
+        return 'pr_domains';
     }
 
     /**
@@ -32,8 +34,9 @@ class Project extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['date_start'], 'safe'],
-            [['title'], 'string', 'max' => 100],
+            [['title'], 'string'],
+            [['project_id'], 'integer'],
+            [['project_id'], 'exist', 'skipOnError' => true, 'targetClass' => Project::className(), 'targetAttribute' => ['project_id' => 'id']],
         ];
     }
 
@@ -45,11 +48,15 @@ class Project extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'title' => 'Title',
-            'date_start' => 'Date Start',
+            'project_id' => 'Project ID',
         ];
     }
-    public function getCompany()
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProject()
     {
-        return $this->hasOne(Company::className(), ['id' => 'company_id']);
+        return $this->hasOne(Project::className(), ['id' => 'project_id']);
     }
 }

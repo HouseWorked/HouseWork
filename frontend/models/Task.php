@@ -8,7 +8,7 @@ use Yii;
  * This is the model class for table "pr_task".
  *
  * @property integer $id
- * @property string $title
+ * @property string $title_task
  * @property string $start
  * @property string $ends
  * @property string $description
@@ -18,14 +18,18 @@ use Yii;
  * @property integer $user_id
  * @property integer $creator_id
  * @property string $creat_at
+ * @property integer $project_id
  *
+ * @property Comment[] $prComments
+ * @property User $creator
+ * @property User $user
+ * @property Project $project
  */
 class Task extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
-    public $selectRepeat;
     public static function tableName()
     {
         return 'pr_task';
@@ -39,11 +43,11 @@ class Task extends \yii\db\ActiveRecord
         return [
             [['start', 'ends', 'creat_at'], 'safe'],
             [['description'], 'string'],
-            [['delete', 'status', 'user_id', 'creator_id'], 'integer'],
-            [['title_task'], 'string', 'max' => 50],
-            [['type'], 'string', 'max' => 20],
+            [['delete', 'status', 'user_id', 'creator_id', 'project_id'], 'integer'],
+            [['title_task', 'type'], 'string', 'max' => 50],
             [['creator_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['creator_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
+            [['project_id'], 'exist', 'skipOnError' => true, 'targetClass' => Project::className(), 'targetAttribute' => ['project_id' => 'id']],
         ];
     }
 
@@ -54,7 +58,7 @@ class Task extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'title_task' => 'Title',
+            'title_task' => 'Title Task',
             'start' => 'Start',
             'ends' => 'Ends',
             'description' => 'Description',
@@ -64,7 +68,16 @@ class Task extends \yii\db\ActiveRecord
             'user_id' => 'User ID',
             'creator_id' => 'Creator ID',
             'creat_at' => 'Creat At',
+            'project_id' => 'Project ID',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPrComments()
+    {
+        return $this->hasMany(Comment::className(), ['task_id' => 'id']);
     }
 
     /**
@@ -82,8 +95,12 @@ class Task extends \yii\db\ActiveRecord
     {
         return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
-    public function getTeem()
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProject()
     {
-        return $this->hasOne(Teem::className(), ['id' => 'teem_id']);
+        return $this->hasOne(Project::className(), ['id' => 'project_id']);
     }
 }

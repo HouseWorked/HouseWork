@@ -13,7 +13,6 @@ $(document).ready(function(){
         cancel: '.text_windows_content'
     });
     // $(".container_windows").resizable();
-
 });
 
 //Настройки рабочего стола
@@ -78,9 +77,12 @@ $("#close_windows").on("click", function(e) {
 
 /*  AJAX  */
 //открытие оконо типа WINDOWS
+$(document).on('click', '#back', function(){
+    var backType = $('#back_windows').data('type');
+    console.log(backType);
+});
 $(document).on('click', '.list', function(){
     var type = $(this).data('type');
-    console.log($(this).data('type'));
     $.ajax({
         url: type+'/main/index',
         type: 'POST',
@@ -92,7 +94,7 @@ $(document).on('click', '.list', function(){
             switch(data.status){
                 case 'success':
                     $('.container_windows').show();
-                    $('.content_windows').replaceWith(data.page);
+                    $('.content_windows').html(data.page);
                     $('.menu').hide();
                     break;
                 case 'fail':

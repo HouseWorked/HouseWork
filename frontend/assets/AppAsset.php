@@ -16,12 +16,9 @@ class AppAsset extends AssetBundle
         'css/popup.css',
         'css/main/main.css',
         'css/main/modal.css',
-
-//        'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css',
     ];
     public $js = [
         'js/jquery-2.1.4.min.js',
-//        'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js',
         'js/popup/jquery.magnific-popup.js',
         'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
         'js/main/screenfull.js',

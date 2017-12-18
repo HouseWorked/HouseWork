@@ -26,7 +26,9 @@ class User extends ActiveRecord implements IdentityInterface
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 10;
 
-
+    const ROLE_USER = 'developer';
+    const ROLE_MODER = 'project_manager';
+    const ROLE_ADMIN = 'director';
     /**
      * @inheritdoc
      */
@@ -51,6 +53,7 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
+            ['role_id', 'integer'],
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
         ];

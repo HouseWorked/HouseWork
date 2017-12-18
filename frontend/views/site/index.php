@@ -4,15 +4,22 @@
 
 $this->title = 'Панель управления(crm)';
 
-//use yii;
+
 use yii\helpers\Url;
 use app\helpers\FileHelper;
 ?>
 <div id="p_prldr"><div class="contpre"><span class="svg_anm"></span><br>Подождите<br><small>идет загрузка</small></div></div>
 <div class="wrapper">
     <div class="content">
+        <?php
+        var_dump(Yii::$app->user->can('project_manager'));
+        var_dump(Yii::$app->user->can('director'));
+        var_dump(Yii::$app->user->can('developer'));
+
+        ?>
         <div class="container_windows">
             <div class="windows_panel" style="background: grey;">
+                <div style="margin-left: 0" id="back_windows" data-type="">Назад</div>
                 <div style="margin-left: 95%" id="close_windows">Закрыть</div>
             </div>
             <div class="content_windows" style="background: white">
@@ -52,6 +59,9 @@ use app\helpers\FileHelper;
 <!--                </div>-->
                 <div class="list" data-type="bid">
                     Заявки
+                </div>
+                <div class="list" data-type="company">
+                    Компании
                 </div>
             </div>
             <div class="search">

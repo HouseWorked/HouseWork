@@ -1,23 +1,24 @@
+
 $(document).off('click', '#modal_close, #overlay');
 $(document).on('click', '#modal_close, #overlay', function(){ //закрытие модалки добавления новой задачи
-    $('#modal_form')
+    $('#modal_form') // Закрытие модалки добавления задачи
         .animate({opacity: 0, top: '45%'}, 200,
             function(){ // пoсле aнимaции
                 $(this).css('display', 'none');
                 $('#overlay').fadeOut(400);
             }
         );
-    $('#modal_form_edit')
+    $('#modal_form_edit') // Закрытие модалки редактирования задачи
         .animate({opacity: 0, top: '0', right: '-10%'}, 200,
             function(){ // пoсле aнимaции
                 $(this).css('display', 'none');
                 $('#overlay').fadeOut(400);
-                console.log($('#title_task_edit').val());
                 $.ajax({
                     url: 'project/view/task?type=edit',
                     dataType: 'json',
                     data: ({
-                        'id': $('input[name="id"]').val(),
+                        'id': $('input[name="main_project_id"]').val(),
+                        'id_project': $('input[name="id"]').val(),
                         'title': $('input[name="title_task_edit"]').val(),
                         'desc': $('input[name="desc_task_edit"]').val(),
                         'newStart': $('input[name="new_start_date"]').val(),
@@ -51,7 +52,9 @@ $(document).on('click', '.new_task', function(e){
     $.ajax({
         url: 'project/view/task?type=add',
         dataType: 'json',
+        cache: false,
         data: ({
+            'id': $('input[name="main_project_id"]').val(),
             'performer': performer,
             'title': title,
             'desc': desc,
@@ -76,6 +79,7 @@ $(document).on('click', '#send_comment_task_text', function(e){
     $.ajax({
         url: 'project/view/task?type=send',
         dataType: 'json',
+        cache: false,
         data: ({
             'text': $('#comment_task_text').val(),
             'task_id': $('input[name="task_id"]').val()
