@@ -13,9 +13,17 @@ use yii\widgets\ActiveForm;
     <label for="">Должность члена команды</label><br>
     <?= $users->user->prof->title ?><br>
     <label for="">Преокты, в которых участвует</label><br>
-    <?php foreach($projects as $key => $project): ?>
-        <?= $project->project->title ?><br>
-    <?php endforeach;?>
+    <table>
+        <tr>
+            <td>Название проекта</td>
+            <td>Статус</td>
+        </tr>
+        <?php foreach($projects as $key => $project): ?>
+        <tr>
+            <td><?= $project->project->title ?></td>
+            <td>Статус</td>
+        <tr>
+        <?php endforeach;?>
+    </table>
     <?= Html::button('Добавить', ['class' => 'btn btn-success']) ?>
-    <?= Html::button('Назад', ['class' => 'btn']) ?>
 <?php ActiveForm::end(); ?>

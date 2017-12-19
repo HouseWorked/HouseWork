@@ -162,6 +162,7 @@ class ViewController extends Controller
     public function actionSettings(){
         $modelDomains = Domains::find() // Все свободные домены
             ->where(['project_id' => null])
+            ->orWhere(['project_id' => yii::$app->request->post('id')])
             ->all();
         $modelDomainValue = Domains::find() // Домен, закрепленный за проектом
             ->where(['project_id' => yii::$app->request->post('id')])

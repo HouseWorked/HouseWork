@@ -12,7 +12,7 @@ use yii\helpers\Html;
     <?= $form->field($modelMain, 'domains_id')->widget(Select2::classname(), [
         'data' => ArrayHelper::map($modelDomains, 'id', 'title'),
         'language' => 'ru',
-        'options' => ['placeholder' => ($currentDomain->title !== null) ? $currentDomain->title : 'К данному проекту домен все еще не прикреплен'],
+        'options' => ['placeholder' => ($currentDomain->title !== null) ? false : 'К данному проекту домен все еще не прикреплен'],
         'pluginOptions' => [
             'allowClear' => true
         ],
@@ -20,7 +20,7 @@ use yii\helpers\Html;
     <label for="">Данные о компании</label>
 
     <?php if($modelMain->company === null): ?>
-        Добавить компанию???
+        <p>Добавить компанию??? или выбрать из существующих</p>
     <?php else:  ?>
         <?= $form->field($modelMain, 'project_responsible_form_fio')->textInput(['value' => $modelMain->company->firstname])->label(false); ?>
         <?= $form->field($modelMain, 'project_responsible_form_phone')->textInput(['value' => $modelMain->company->phone])->label(false); ?>
