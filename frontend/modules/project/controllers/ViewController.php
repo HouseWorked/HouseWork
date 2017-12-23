@@ -7,6 +7,7 @@ use app\models\ProjectTeem;
 use app\models\Task;
 use app\models\User;
 use app\models\Comment;
+use app\models\ErrorProject;
 use app\models\Teem;
 use app\models\Domains;
 use yii;
@@ -190,9 +191,15 @@ class ViewController extends Controller
         ]);
     }
     public function actionErrors(){
+        $errors = ErrorProject::find()
+            ->where(['error_type' => 'design'])
+            ->andWhere(['project_id' => yii::$app->request->post('id')])
+            ->all();
         return  json_encode([
             'status' => 'success',
-            'content' => $this->renderAjax('_errors')
+            'content' => $this->renderAjax('_errors', [
+                'errors' => $errors
+            ])
         ]);
     }
     public function actionTeem(){
@@ -240,6 +247,18 @@ class ViewController extends Controller
             'content' => $this->renderAjax('include/modal_info_user', [
                 'projects' => $projects,
                 'users' => $user
+            ])
+        ]);
+    }
+    public function actionErrorsProject(){ // Получение списка ошибок в зависимости от полученного типа задачи
+        $errors = ErrorProject::find()
+            ->where(['error_type' => yii::$app->request->post('type_errors')])
+            ->andWhere(['project_id' => yii::$app->request->post('project_id')])
+            ->all();
+        return json_encode([
+            'status' => 'success',
+            'content' => $this->renderAjax('include/content_errors', [
+                'errors' => $errors,
             ])
         ]);
     }

@@ -54,14 +54,14 @@ use app\helpers\FileHelper;
                 <div class="list" data-type="fin">
                     Финансы
                 </div>
-<!--                <div class="list" data-type="task">-->
-<!--                    Задачи-->
-<!--                </div>-->
                 <div class="list" data-type="bid">
                     Заявки
                 </div>
                 <div class="list" data-type="company">
                     Компании
+                </div>
+                <div class="list" data-type="ad">
+                    Рекламный блок
                 </div>
             </div>
             <div class="search">

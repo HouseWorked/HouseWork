@@ -142,8 +142,8 @@ echo FullCalendar::widget([
         <div class="form-group">
             <?= Html::submitButton('Отправить', ['class' => 'btn btn-primary new_task']) ?>
         </div>
-        <input type="text" name="starts" value="">
-        <input type="text" name="ends" value="">
+        <input type="hidden" name="starts" value="">
+        <input type="hidden" name="ends" value="">
         <?php ActiveForm::end(); ?>
     </div>
 </div>

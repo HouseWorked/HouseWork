@@ -22,7 +22,6 @@ $design = true;
             'closeOnSelect' => false
         ],
     ])->label(false);?>
-
     <?php ActiveForm::end(); ?>
     <div id="teem_content">
         <?php if(empty($projects)): ?>
@@ -42,11 +41,12 @@ $design = true;
                 <label for=""><?= ($design == true) ? "Дизайнер" : 'false'?></label>
                 <ul>
                     <?php foreach($projects as $key => $project): ?>
+
                         <?php if($project->user->prof->title === "Дизайнер"): ?>
-                            <li><?= var_dump($project->user->username) ?></li>
+
                             <li><?= (isset($project->user->username)) ? 'empty' : $project->user->username ?></li>
                             <?php else:?>
-                            <?php $design = false; ?>
+                            <li><?= var_dump('asfasd') ?></li>
                         <?php endif; ?>
                     <?php endforeach;?>
                 </ul>
@@ -59,7 +59,6 @@ $design = true;
     $(document).off('click', '.select2-results__option');
 $(document).on('click', '.select2-results__option', function(e){
 
-//    console.log("selecting val="+ e.val+" choice="+ JSON.stringify(e.choice));
     var first_id = $(this).attr('id');
     var lastIndex = first_id.lastIndexOf("-");
     var id = first_id.substr(lastIndex+1);
@@ -88,9 +87,9 @@ $(document).on('click', '.select2-results__option', function(e){
 
 </script>
 <!-- окно добавления задачи -->
-<div id="modal_form"><!-- Сaмo oкнo -->
+<div id="modal_form" style="z-index: 10001"><!-- Сaмo oкнo -->
     <span id="modal_close">X</span> <!-- Кнoпкa зaкрыть -->
     <div class="container" id="user_info_teem">
     </div>
 </div>
-<div id="overlay"></div><!-- Пoдлoжкa -->
+<div id="overlay" style="z-index: 10000"></div><!-- Пoдлoжкa -->
