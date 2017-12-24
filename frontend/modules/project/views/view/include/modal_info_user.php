@@ -9,10 +9,11 @@ use yii\widgets\ActiveForm;
     ]
 ]); ?>
     <label for="">Имя члена команды</label><br>
-    <?= $users->user->username ?><br>
+    <span id = "user_id" data-value = "<?= $users->id ?>"><?= $users->username ?></span><br>
     <label for="">Должность члена команды</label><br>
-    <?= $users->user->prof->title ?><br>
+    <span id = "prof_label"><?= $users->prof->title ?></span><br>
     <label for="">Преокты, в которых участвует</label><br>
+	<?php if(!empty($projects)):?>
     <table>
         <tr>
             <td>Название проекта</td>
@@ -25,5 +26,30 @@ use yii\widgets\ActiveForm;
         <tr>
         <?php endforeach;?>
     </table>
-    <?= Html::button('Добавить', ['class' => 'btn btn-success']) ?>
+	<?php else: ?>
+	В проектах не участвует <br>
+	<?php endif;?>
+    <?= Html::button('Добавить', ['class' => 'btn btn-success send_new_teem_chlen']) ?>
 <?php ActiveForm::end(); ?>
+<script>
+$(document).off('click', '.send_new_teem_chlen');
+$(document).on('click', '.send_new_teem_chlen', function(e){
+	var id = $('#user_id').data('value');
+    $.ajax({
+		url: 'project/view/teem',
+		type: 'POST',
+		dataType: 'JSON',
+		data: ({
+			'id': $('input[name="main_project_id"]').val(),
+			'user_id': id,
+		}),
+		success: function(data){
+			switch(data.status){
+				case "success":	
+					$('.text_windows_content').html(data.content);
+					break;
+			}
+		}
+	});
+});
+</script>

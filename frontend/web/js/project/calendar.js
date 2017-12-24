@@ -76,6 +76,10 @@ $(document).on('click', '.new_task', function(e){
 $(document).off('click', '#send_comment_task_text'); // убираем двойной клик
 $(document).on('click', '#send_comment_task_text', function(e){
     e.preventDefault();
+	if($('#comment_task_text').val() == ''){
+		console.log('Пустое сообщение');
+		return false;
+	}
     $.ajax({
         url: 'project/view/task?type=send',
         dataType: 'json',

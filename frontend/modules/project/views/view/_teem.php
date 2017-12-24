@@ -13,7 +13,10 @@ $design = true;
 <div id="table_teem_select">
     <div class="title">Выбор команды</div>
     <?php $form = ActiveForm::begin() ?>
-    <?= $form->field($model, 'user_id')->widget(Select2::classname(), [
+	<?php if(empty($teem_select)): ?>
+		Команда еще не выбрана
+		<?php else: ?>
+		<?= $form->field($model, 'user_id')->widget(Select2::classname(), [
         'data' => ArrayHelper::map($teem_select, 'id', 'username', 'group'),
         'language' => 'ru',
         'options' => ['placeholder' => 'Выбирете исполнителя ...', ],
@@ -22,43 +25,22 @@ $design = true;
             'closeOnSelect' => false
         ],
     ])->label(false);?>
+	<?php endif; ?>
+    
     <?php ActiveForm::end(); ?>
     <div id="teem_content">
-        <?php if(empty($projects)): ?>
-            Команда еще не выбрана
-            <?php else:?>
-            <div id="programmist_teem_project">
-                <label for="">Программист</label>
-                <ul>
-                    <?php foreach($projects as $key => $project): ?>
-                        <?php if($project->user->prof->title === "Программист"): ?>
-                            <li><?= $project->user->username ?></li>
-                        <?php endif; ?>
-                    <?php endforeach;?>
-                </ul>
-            </div>
-            <div id="design_teem_project">
-                <label for=""><?= ($design == true) ? "Дизайнер" : 'false'?></label>
-                <ul>
-                    <?php foreach($projects as $key => $project): ?>
-
-                        <?php if($project->user->prof->title === "Дизайнер"): ?>
-
-                            <li><?= (isset($project->user->username)) ? 'empty' : $project->user->username ?></li>
-                            <?php else:?>
-                            <li><?= var_dump('asfasd') ?></li>
-                        <?php endif; ?>
-                    <?php endforeach;?>
-                </ul>
-            </div>
-            <span></span>
-        <?php endif; ?>
+	<?php if(empty($projects)): ?>
+		Команда еще не выбрана
+		<?php else: ?>
+        <?= $this->render('include/teem_content', [
+			'projects' => $projects
+		]);?>
+	<?php endif; ?>
     </div>
 </div>
 <script>
-    $(document).off('click', '.select2-results__option');
+$(document).off('click', '.select2-results__option');
 $(document).on('click', '.select2-results__option', function(e){
-
     var first_id = $(this).attr('id');
     var lastIndex = first_id.lastIndexOf("-");
     var id = first_id.substr(lastIndex+1);
@@ -72,17 +54,37 @@ $(document).on('click', '.select2-results__option', function(e){
         url: 'project/view/teem-user-info',
         dataType: 'json',
         data: ({
-            'id_user': id
+			'id_user': id
         }),
         type: 'POST',
         success: function(data){
             switch(data.status){
                 case 'success':
                     $('#user_info_teem').html(data.content);
+					$('input[name="full_id"]').val(first_id);
                     break;
             }
         }
     });
+});
+$(document).off('click', '.delete_chlen_teem');
+$(document).on('click', '.delete_chlen_teem', function(){
+	$.ajax({
+		url: 'project/view/teem',
+		type: 'POST',
+		dataType: 'JSON',
+		data: ({
+			'id': $('input[name="main_project_id"]').val(),
+			'delete_id': $(this).attr('id')
+		}),
+		success: function(data){
+			switch(data.status){
+                case 'success':
+                    $('.text_windows_content').html(data.content);
+                    break;
+            }
+		}
+	});
 });
 
 </script>

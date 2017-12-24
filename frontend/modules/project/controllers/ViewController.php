@@ -202,7 +202,19 @@ class ViewController extends Controller
             ])
         ]);
     }
-    public function actionTeem(){
+    public function actionTeem(){	
+		// Прикрепление работника к определенному проекту
+		$modelProject = new ProjectTeem();
+		if(yii::$app->request->post('user_id')){
+			$modelProject->project_id = yii::$app->request->post('id');
+			$modelProject->user_id    = yii::$app->request->post('user_id');
+			$modelProject->insert();
+		}
+		// Удаление члена команды
+		if(yii::$app->request->post('delete_id')){
+			$modelDelete = ProjectTeem::find()->where(['user_id' => yii::$app->request->post('delete_id')])->one();
+			$modelDelete->delete();
+		}
         // Массив с исполнителям
         $model = new User();
         $teem = User::find()->where(['id' => yii::$app->user->id])->one();
@@ -239,8 +251,8 @@ class ViewController extends Controller
         $projects = ProjectTeem::find()
             ->where(['user_id' => yii::$app->request->post('id_user')])
             ->all();
-        $user = ProjectTeem::find()
-            ->where(['user_id' => yii::$app->request->post('id_user')])
+        $user = User::find()
+            ->where(['id' => yii::$app->request->post('id_user')])
             ->one();
         return json_encode([
             'status' => 'success',
