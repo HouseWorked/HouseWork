@@ -30,7 +30,7 @@ class Company extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['title', 'firstname'], 'string'],
+            [['title', 'firstname', 'email'], 'string'],
             [['phone'], 'integer'],
         ];
     }

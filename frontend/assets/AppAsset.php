@@ -16,6 +16,7 @@ class AppAsset extends AssetBundle
         'css/popup.css',
         'css/main/main.css',
         'css/main/modal.css',
+        'plugins/toastr/toastr.css',
     ];
     public $js = [
         'js/jquery-2.1.4.min.js',
@@ -23,6 +24,7 @@ class AppAsset extends AssetBundle
         'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
         'js/main/screenfull.js',
         'js/main/main.js',
+        'plugins/toastr/toastr.js',
     ];
     public $depends = [
 //        'yii\web\YiiAsset',

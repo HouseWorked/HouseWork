@@ -2,6 +2,7 @@
 
 namespace app\modules\project\controllers;
 
+use app\models\Company;
 use app\models\Project;
 use app\models\ProjectTeem;
 use app\models\Task;
@@ -10,6 +11,7 @@ use app\models\Comment;
 use app\models\ErrorProject;
 use app\models\Teem;
 use app\models\Domains;
+use client\modules\domain\models\Domain;
 use yii;
 use yii\web\Controller;
 use yii\helpers\StringHelper;
@@ -119,11 +121,14 @@ class ViewController extends Controller
                 case 'edit': // Редактирование задачи
                     $id = yii::$app->request->post('id_project');
                     $task = Task::find()->where(['id' => $id])->one();
-                    $task->start = yii::$app->request->post('newStart');
-                    $task->ends = yii::$app->request->post('newEnds');
-                    $task->type = yii::$app->request->post('importance');
-                    $task->title_task = yii::$app->request->post('title');
-                    $task->description = yii::$app->request->post('desc');
+                    if(yii::$app->request->post('newEnds')){
+                        $task->start = yii::$app->request->post('newStart');
+                        $task->ends = yii::$app->request->post('newEnds');
+                    }else{
+                        $task->type = yii::$app->request->post('importance');
+                        $task->title_task = yii::$app->request->post('title');
+                        $task->description = yii::$app->request->post('desc');
+                    }
                     $task->save();
                     break;
             }
@@ -139,12 +144,12 @@ class ViewController extends Controller
             $Event->id = $task->id;
             $Event->title = $task->title_task;
             $Event->desc = $task->description;
+            $Event->type = $task->type;
             if($task->status == 1){
                 $Event->className = 'ok';
             }else{
                 $Event->className = ($start < $current && $task->status == 0)? 'overdue' : $task->type;
             }
-
             $Event->start = date('Y-m-d H:i:s', strtotime($task->start));
             $Event->end = ($start !== $ends) ? date('Y-m-d H:i:s', strtotime('+1 day', strtotime($task->ends))) : date('Y-m-d H:i:s', strtotime($task->ends));
             $Event->allDay = ($start !== $ends) ? true : false;
@@ -272,6 +277,39 @@ class ViewController extends Controller
             'content' => $this->renderAjax('include/content_errors', [
                 'errors' => $errors,
             ])
+        ]);
+    }
+    public function actionSaveSettings(){ // Получение списка ошибок в зависимости от полученного типа задачи
+        // Сохранение нового имени проекта и основной информации о проекте
+        if(yii::$app->formatter->asDate(yii::$app->request->post('new_date_start'), 'Y-M-dd H:i:s') > yii::$app->formatter->asDate(yii::$app->request->post('new_date_ends'), 'Y-M-dd H:i:s')){
+            return json_encode([
+                'status' => 'error',
+                'content' => 'Выбран не правильный диапазон времени'
+            ]);
+        }
+        $project_name = Project::find()->where(['id' => yii::$app->request->post('project_id')])->one();
+        $project_name->title = yii::$app->request->post('name_project');
+        $project_name->type = yii::$app->request->post('project_type');
+        $project_name->date_start = yii::$app->formatter->asDate(yii::$app->request->post('new_date_start'), 'Y-M-dd H:i:s');
+        $project_name->date_end = yii::$app->formatter->asDate(yii::$app->request->post('new_date_ends'), 'Y-M-dd H:i:s');
+        $project_name->save();
+        // Сохранение домена
+        $deleteDomainsForProject = Domains::find()->where(['project_id' => yii::$app->request->post('project_id')])->one(); // Отвязываем домен
+        $deleteDomainsForProject->project_id = null;
+        $deleteDomainsForProject->save();
+        $domain = Domains::find()->where(['id' => yii::$app->request->post('domain_id')])->one(); //Привязываем домен
+        $domain->project_id = yii::$app->request->post('project_id');
+        $domain->save();
+        // Сохранение данных о компании и ответственного
+        $company = Company::find()->where(['id' => yii::$app->request->post('id_company')])->one();
+        $company->title = yii::$app->request->post('name_company');
+        $company->firstname = yii::$app->request->post('responsible_name');
+        $company->phone = yii::$app->request->post('responsible_phone');
+        $company->email = yii::$app->request->post('responsible_email');
+        $company->save();
+        return json_encode([
+            'status' => 'success',
+            'content' => 'good'
         ]);
     }
 }

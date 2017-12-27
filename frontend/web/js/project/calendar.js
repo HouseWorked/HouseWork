@@ -1,6 +1,5 @@
-
 $(document).off('click', '#modal_close, #overlay');
-$(document).on('click', '#modal_close, #overlay', function(){ //закрытие модалки добавления новой задачи
+$(document).on('click', '#modal_close, #overlay', function(){ //закрытие модалки
     $('#modal_form') // Закрытие модалки добавления задачи
         .animate({opacity: 0, top: '45%'}, 200,
             function(){ // пoсле aнимaции
@@ -21,8 +20,7 @@ $(document).on('click', '#modal_close, #overlay', function(){ //закрытие
                         'id_project': $('input[name="id"]').val(),
                         'title': $('input[name="title_task_edit"]').val(),
                         'desc': $('input[name="desc_task_edit"]').val(),
-                        'newStart': $('input[name="new_start_date"]').val(),
-                        'newEnds': $('input[name="new_ends_date"]').val(),
+
                         'importance': $('select[name="importance"]').val()
                     }),
                     type: 'POST',
@@ -39,7 +37,7 @@ $(document).on('click', '#modal_close, #overlay', function(){ //закрытие
 });
 // new task
 $(document).off('click', '.new_task'); // убираем двойной клик
-$(document).on('click', '.new_task', function(e){
+$(document).on('click', '.new_task', function(e){// Добавление новой задачи
     e.preventDefault();
     var date_start = $('input[name="starts"]').val();
     var date_ends = $('input[name="ends"]').val();
@@ -49,6 +47,19 @@ $(document).on('click', '.new_task', function(e){
     var start = date_start+" "+$('#w2').val();
     var ends = date_ends+" "+$('#w3').val();
     var importance = $('input[name="Task[type]"]:checked').val();
+    // Проверка полей на пустоту
+    var hasEmptyFields = false;
+    !performer ? $('.select2-container--krajee .select2-selection').css('border', '1px solid red') : $('.select2-container--krajee .select2-selection').css('border', '1px solid green');
+    !title ? $('#task-title_task').css('border', '1px solid red') : $('#task-title_task').css('border', '1px solid green');
+    !desc ? $('#task-description').css('border', '1px solid red') : $('#task-description').css('border', '1px solid green');
+    if(!title || !desc || !performer){
+        hasEmptyFields = true;
+    }
+    if (hasEmptyFields) {
+        $('.errors_block').text('Не все поля заполнены!');
+        return false;
+    }
+
     $.ajax({
         url: 'project/view/task?type=add',
         dataType: 'json',
@@ -77,7 +88,6 @@ $(document).off('click', '#send_comment_task_text'); // убираем двой�
 $(document).on('click', '#send_comment_task_text', function(e){
     e.preventDefault();
 	if($('#comment_task_text').val() == ''){
-		console.log('Пустое сообщение');
 		return false;
 	}
     $.ajax({

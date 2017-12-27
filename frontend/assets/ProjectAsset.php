@@ -16,10 +16,9 @@ class ProjectAsset extends AssetBundle
         'css/project/main.css'
     ];
     public $js = [
-//        'js/jquery-2.1.4.min.js',
         '//cdn.jsdelivr.net/momentjs/latest/moment.min.js',
         '//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js',
-        'js/project/main.js',
+        'js/project/settings.js',
         'js/project/calendar.js',
     ];
     public $depends = [

@@ -29,33 +29,41 @@ use kartik\time\TimePicker;
     <?php else:  ?>
         <?= $form->field($modelMain, 'project_responsible_form_fio')->textInput(['value' => $modelMain->company->firstname])->label(false); ?>
         <?= $form->field($modelMain, 'project_responsible_form_phone')->textInput(['value' => $modelMain->company->phone])->label(false); ?>
+        <?= $form->field($modelMain, 'project_responsible_form_email')->textInput(['value' => $modelMain->company->email])->label(false); ?>
         <?= $form->field($modelMain, 'project_responsible_form_company')->textInput(['value' => $modelMain->company->title])->label(false); ?>
+        <input type="hidden" value="<?= $modelMain->company->id ?>" name="company_id"> <!-- id компании -->
     <?php endif; ?>
-    <label for="">Сроки выполнения проекта</label>
-    <?= $form->field($modelMain, 'project_responsible_form_company')->textInput(['value' => 'Здесь выводить сроки проекта'])->label(false); ?>
-	
-		<input type="text" name="daterange" value="01/01/2015 1:30 PM - 01/01/2015 2:00 PM" id="daterange_edit"/>
-        <input type="hidden" value="" name="new_start_date">
-        <input type="hidden" value="" name="new_ends_date">
-        <input type="hidden" value="" name="id">
+    <label for="">Выберите тип проекта</label><br>
+    <select name="select_type_project" id="">
+        <option value="1" <?= ($modelMain->type == 1) ? 'selected' : "" ?> >Создание сайтов</option>
+        <option value="2" <?= ($modelMain->type == 2) ? 'selected' : "" ?> >Поддержка</option>
+        <option value="3" <?= ($modelMain->type == 3) ? 'selected' : "" ?> >SEO продвижение</option>
+        <option value="4" <?= ($modelMain->type == 4) ? 'selected' : "" ?> >Крупный проект</option>
+        <option value="5" <?= ($modelMain->type == 5) ? 'selected' : "" ?> >Дизайн</option>
+        <option value="6" <?= ($modelMain->type == 6) ? 'selected' : "" ?> >Реклама</option>
+    </select><br>
+    <label for="">Сроки выполнения проекта</label><br>
+	    Начало:
+		<input type="text" name="startsDate" value="<?= Yii::$app->formatter->asDate($modelMain->date_start, 'M.d.yyyy') ?>"/>
+		Окончание:
+        <input type="text" name="endsDate" value="<?= Yii::$app->formatter->asDate($modelMain->date_end, 'M.d.yyyy') ?>"/>
         <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
         <!-- Include Date Range Picker -->
         <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
         <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
         <script type="text/javascript">
             $(document).ready(function(){
-                $('input[name="daterange"]').daterangepicker({
-                    "showWeekNumbers": true,
-                    "timePicker": true,
-                    "timePicker24Hour": true,
+                $('input[name="startsDate"]').daterangepicker({
+                    "singleDatePicker": true,
+                    "opens": "center",
+                    "drops": "up",
                     "locale": {
                         "format": "DD.MM.YYYY",
                         "separator": " - ",
-                        "applyLabel": "Выбрать",
-                        "cancelLabel": "Отмена",
+                        "applyLabel": "Apply",
+                        "cancelLabel": "Cancel",
                         "fromLabel": "From",
                         "toLabel": "To",
-                        "timePickerIncrement": 5,
                         "customRangeLabel": "Custom",
                         "weekLabel": "W",
                         "daysOfWeek": [
@@ -82,24 +90,49 @@ use kartik\time\TimePicker;
                             "Декабрь"
                         ],
                         "firstDay": 1
-                    },
-                    "startDate": "12/06/2017",
-                    "endDate": "12/12/2017",
-                    "opens": "left"
-                }, function(start , end, label) {
-                    var hourse_left = ($('.left').find('.hourselect').val() < 10) ? "0"+$('.left').find('.hourselect').val() : $('.left').find('.hourselect').val();
-                    var hourse_right = ($('.right').find('.hourselect').val() < 10) ? "0"+$('.right').find('.hourselect').val() : $('.right').find('.hourselect').val();
-                    var minute_left = ($('.left').find('.minuteselect').val() < 10) ? "0"+$('.left').find('.minuteselect').val() : $('.left').find('.minuteselect').val();
-                    var minute_right = ($('.right').find('.minuteselect').val() < 10) ? "0"+$('.right').find('.minuteselect').val() : $('.right').find('.minuteselect').val();
-                    var new_start_date = start.format('YYYY-MM-DD') + " " + hourse_left + ":" + minute_left + ":" + "00";
-                    var new_ends_date = end.format('YYYY-MM-DD') + " " + hourse_right + ":" + minute_right + ":" + "00";
-                    $('input[name="new_start_date"]').val(new_start_date);
-                    $('input[name="new_ends_date"]').val(new_ends_date);
+                    }
                 });
-
+                $('input[name="endsDate"]').daterangepicker({
+                    "singleDatePicker": true,
+                    "opens": "center",
+                    "drops": "up",
+                    "locale": {
+                        "format": "DD.MM.YYYY",
+                        "separator": " - ",
+                        "applyLabel": "Apply",
+                        "cancelLabel": "Cancel",
+                        "fromLabel": "From",
+                        "toLabel": "To",
+                        "customRangeLabel": "Custom",
+                        "weekLabel": "W",
+                        "daysOfWeek": [
+                            "Вс",
+                            "Пн",
+                            "Вт",
+                            "Ср",
+                            "Чт",
+                            "Пт",
+                            "Сб"
+                        ],
+                        "monthNames": [
+                            "Январь",
+                            "Февраль",
+                            "Март",
+                            "Апрель",
+                            "Май",
+                            "Июнь",
+                            "Июль",
+                            "Август",
+                            "Сентябрь",
+                            "Октябрь",
+                            "Ноябрь",
+                            "Декабрь"
+                        ],
+                        "firstDay": 1
+                    }
+                });
             });
         </script>
-	
 	<br>
-	<?= Html::button('Сохранить', ['class' => 'btn btn-success']) ?>
+	<?= Html::button('Сохранить', ['class' => 'btn btn-success send_update_settings_project']) ?>
 <?php ActiveForm::end() ?>

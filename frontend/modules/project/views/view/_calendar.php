@@ -6,6 +6,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
+\frontend\assets\ProjectAsset::register($this);
 ?>
 <?php
 echo FullCalendar::widget([
@@ -36,13 +37,14 @@ echo FullCalendar::widget([
                             .css('display', 'block')
                             .animate({opacity: 1, top: '50%'}, 200);
                     });
+                    $('#task-title_task').val('');
+                    $('#task-description').val('');
                     $('input[name=\"starts\"]').val(fullDateStart);
-                    $('input[name=\"ends\"]').val(fullDateEnds);
+                    $('input[name=\"ends\"]').val(fullDateEnds);                
             }"),
         'eventClick' => new \yii\web\JsExpression(' //редактирование задачи
                 function(event) {
                     var eve = event;
-                    console.log(eve);
                     $("#title_task_edit").focusout(function(){
                        console.log(eve+" - this events");
                     });
@@ -53,15 +55,20 @@ echo FullCalendar::widget([
                             .animate({opacity: 1, top: 0, right: 0}, 200);
                     });                   
                     $("input[name=\'task_id\']").val(event.id);   // получаем id редактируемой задачи    
-                    $("input[name=\'title_task_edit\']").val(event.title);   // получаем id редактируемой задачи    
-                    $("input[name=\'desc_task_edit\']").val(event.desc);   // получаем id редактируемой задачи  
-                    
-                    
+                    $("input[name=\'title_task_edit\']").val(event.title);   // получаем название редактируемой задачи    
+                    $("input[name=\'desc_task_edit\']").val(event.desc);   // получаем описание редактируемой задачи                    
+                    $(\'#importance_edit option\').each(function(){ // получаем важность(тип) задачи
+                      if($(this).val() == event.type){
+                        $(this).attr(\'selected\', \'selected\');
+                      }
+                    });    
+                    // Получение даты задачи                                                  
                     var dateS = new Date(event.start._i);
                     var dateE = new Date(event.end._i);
                     var full_date_start = dateS.getDate()+"."+(dateE.getMonth() + 1)+"."+dateS.getFullYear();
                     var full_date_end = dateE.getDate()+"."+(dateE.getMonth() + 1)+"."+dateE.getFullYear();
-               
+                    var full_date_end1 = (dateE.getDate())+"."+(dateE.getMonth() + 1)+"."+dateE.getFullYear();                 
+                    $("input[name=\'daterange\']").val(full_date_start + " - " + full_date_end1);
                     if(full_date_start == full_date_end){
                         $("#db_date").html(full_date_start);                     
                     }else{
@@ -111,8 +118,9 @@ echo FullCalendar::widget([
             ],
         ])->label(false);?>
         <?= $form->field($model, 'title_task')->textInput(['placeholder' => 'Название задачи'])->label(false); ?>
-        <?= $form->field($model, 'description')->textarea(['placeholder' => 'Название задачи', 'style' => 'max-width: 400px; min-height: 50px; max-height: 115px'])->label(false); ?>
-       <div class="time_picker">
+        <?= $form->field($model, 'description')->textarea(['placeholder' => 'Описание задачи', 'style' => 'max-width: 400px; min-height: 50px; max-height: 115px'])->label(false); ?>
+        <div class="errors_block"></div> <!-- Вывод ошибок -->
+        <div class="time_picker">
            <ul>
                <li>
                    <?=  TimePicker::widget([
@@ -138,6 +146,7 @@ echo FullCalendar::widget([
                </li>
            </ul>
        </div>
+       <?php $model->type = 'danger'; ?>
         <?= $form->field($model, 'type')->radioList(['danger' => 'Важная задачв', 'usual' => 'Обычная задача', 'general' => 'Общая задача'])->label('Выбирите важность задачи') ?>
         <div class="form-group">
             <?= Html::submitButton('Отправить', ['class' => 'btn btn-primary new_task']) ?>
@@ -152,9 +161,7 @@ echo FullCalendar::widget([
     <span id="modal_close_edit" style="display: none">X</span> <!-- Кнoпкa зaкрыть -->
     <?php $form = ActiveForm::begin(); ?>
     <div class="head">
-        <input type="text" name="daterange" value="01/01/2015 1:30 PM - 01/01/2015 2:00 PM" id="daterange_edit"/>
-        <input type="hidden" value="" name="new_start_date">
-        <input type="hidden" value="" name="new_ends_date">
+        <input type="text" name="daterange" value="" id="daterange_edit"/>
         <input type="hidden" value="" name="id">
         <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
         <!-- Include Date Range Picker -->
@@ -201,8 +208,6 @@ echo FullCalendar::widget([
                         ],
                         "firstDay": 1
                     },
-                    "startDate": "12/06/2017",
-                    "endDate": "12/12/2017",
                     "opens": "left"
                 }, function(start , end, label) {
                     var hourse_left = ($('.left').find('.hourselect').val() < 10) ? "0"+$('.left').find('.hourselect').val() : $('.left').find('.hourselect').val();
@@ -211,12 +216,32 @@ echo FullCalendar::widget([
                     var minute_right = ($('.right').find('.minuteselect').val() < 10) ? "0"+$('.right').find('.minuteselect').val() : $('.right').find('.minuteselect').val();
                     var new_start_date = start.format('YYYY-MM-DD') + " " + hourse_left + ":" + minute_left + ":" + "00";
                     var new_ends_date = end.format('YYYY-MM-DD') + " " + hourse_right + ":" + minute_right + ":" + "00";
-                    $('input[name="new_start_date"]').val(new_start_date);
-                    $('input[name="new_ends_date"]').val(new_ends_date);
+                    $.ajax({
+                        url: 'project/view/task?type=edit',
+                        dataType: 'json',
+                        type: 'POST',
+                        data: ({
+                            'id': $('input[name="main_project_id"]').val(),
+                            'id_project': $('input[name="id"]').val(),
+                            'newStart': new_start_date,
+                            'newEnds': new_ends_date
+                        }),
+                        success: function(data){
+                            switch(data.status){
+                                case 'success':
+                                    break;
+                            }
+                        }
+                    });
                 });
 
             });
         </script>
+        <style>
+            body > div.daterangepicker.dropdown-menu.ltr.show-calendar.opensleft > div.ranges{ /*убираем кнопки управлвление в плагине календаря*/
+                display: none;
+            }
+        </style>
         <span style="float: right">
             <select name="importance" id="importance_edit">
                 <option value="danger">Важная</option>

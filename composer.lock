@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "1d8c19ec1e97667b7d855c825a4b1b1b",
+    "content-hash": "f923554fab48e7bb9d5851d06f3f969b",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -148,6 +148,28 @@
                 "shasum": null
             },
             "type": "bower-asset"
+        },
+        {
+            "name": "bower-asset/toastr",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:johnpapa/toastr-bower.git",
+                "reference": "169aa8e3021cbf1c64eaedec3b418c04313af95a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/johnpapa/toastr-bower/zipball/169aa8e3021cbf1c64eaedec3b418c04313af95a",
+                "reference": "169aa8e3021cbf1c64eaedec3b418c04313af95a",
+                "shasum": null
+            },
+            "require": {
+                "bower-asset/jquery": ">=1.12.0"
+            },
+            "type": "bower-asset",
+            "license": [
+                "MIT"
+            ]
         },
         {
             "name": "bower-asset/yii2-pjax",
@@ -435,6 +457,49 @@
                 "yii2"
             ],
             "time": "2017-01-08T06:36:24+00:00"
+        },
+        {
+            "name": "odaialali/yii2-toastr",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/odai-alali/yii2-toastr.git",
+                "reference": "b5c18473b2ae46d417b9993fa37a12d341dbd1d1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/odai-alali/yii2-toastr/zipball/b5c18473b2ae46d417b9993fa37a12d341dbd1d1",
+                "reference": "b5c18473b2ae46d417b9993fa37a12d341dbd1d1",
+                "shasum": ""
+            },
+            "require": {
+                "bower-asset/toastr": "*",
+                "yiisoft/yii2": "*"
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "odaialali\\yii2toastr\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Odai Alali",
+                    "email": "odai.alali@gmail.com"
+                }
+            ],
+            "description": "This is the Toastr extension for Yii 2. It encapsulates Toastr plugin in terms of Yii widgets, and makes ajax notification easy to implement.",
+            "keywords": [
+                "extension",
+                "notification",
+                "toastr",
+                "yii2"
+            ],
+            "time": "2016-03-04T14:05:16+00:00"
         },
         {
             "name": "philippfrenzel/yii2fullcalendar",
@@ -3310,7 +3375,7 @@
         }
     ],
     "aliases": [],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "stability-flags": {
         "kartik-v/yii2-widget-select2": 20
     },

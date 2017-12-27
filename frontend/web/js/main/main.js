@@ -76,33 +76,112 @@ $("#close_windows").on("click", function(e) {
 //end
 
 /*  AJAX  */
-//открытие оконо типа WINDOWS
-$(document).on('click', '#back', function(){
-    var backType = $('#back_windows').data('type');
-    console.log(backType);
-});
-$(document).on('click', '.list', function(){
-    var type = $(this).data('type');
-    $.ajax({
-        url: type+'/main/index',
-        type: 'POST',
-        dataType: 'JSON',
-        data: ({
-            'type': type
-        }),
-        success: function(data){
-            switch(data.status){
-                case 'success':
-                    $('.container_windows').show();
-                    $('.content_windows').html(data.page);
-                    $('.menu').hide();
-                    break;
-                case 'fail':
-                    break;
-            }
-        },
-        error: function(){
-            toastr.error('Файла нет');
-        }
+    //Работа с окнами
+    $(document).on('click', '#back', function(){ // кнопка назад
+        var backType = $('#back_windows').data('type');
+        console.log(backType);
     });
-});
+    $(document).on('click', '.list', function(){ // Открытие главного окна
+        var type = $(this).data('type');
+        $.ajax({
+            url: type+'/main/index',
+            type: 'POST',
+            dataType: 'JSON',
+            data: ({
+                'type': type
+            }),
+            success: function(data){
+                switch(data.status){
+                    case 'success':
+                        $('.container_windows').show();
+                        $('.content_windows').html(data.page);
+                        $('.menu').hide();
+                        break;
+                    case 'fail':
+                        break;
+                }
+            },
+            error: function(){
+                toastr.error('Файла нет');
+            }
+        });
+    });
+    $(document).on('click', '.select_left_menu', function(){// Открытие в главном окне (ри выборе в левом меню)
+        var type = $(this).data('type');
+        $.ajax({
+            url: 'project/main/view?type='+type,
+            type: 'POST',
+            dataType: 'JSON',
+            success: function(data){
+                switch(data.status){
+                    case 'success':
+                        $('.text_windows_content').html(data.content);
+                        $('.search').find('input[name="search-project"]').attr('id', data.type);
+                        break;
+                    case 'fail':
+                        break;
+                }
+            }
+        });
+    });
+    $(document).off('click', '.select_element');// Открытие страницы с подробной информацией о элементе
+    $(document).on('click', '.select_element', function(){
+        var id = $(this).attr('id');
+        $.ajax({
+            url: 'project/view/index?id='+id,
+            type: 'POST',
+            dataType: 'JSON',
+            success: function(data){
+                switch(data.status){
+                    case 'success':
+                        $('.ajax_windows_content').html(data.page);
+                        break;
+                    case 'fail':
+                        break;
+                }
+            }
+        });
+    });
+    $(document).off('click', '.view_element');// Открытие окон в части  "Подробная информация"
+    $(document).on('click', '.view_element', function(){
+        var id = $(this).attr('id');
+        var type = $(this).data('type');
+        $.ajax({
+            url: 'project/view/'+type,
+            type: 'POST',
+            dataType: 'JSON',
+            data: ({
+                'id': $('input[name="main_project_id"]').val()
+            }),
+            success: function(data){
+                switch(data.status){
+                    case 'success':
+                        $('.text_windows_content').html(data.content);
+
+                        break;
+                    case 'fail':
+                        break;
+                }
+            }
+        });
+    });
+    $(document).on('keyup', '.search', function(e){ // функция поиска
+        $.ajax({
+            url: 'project/main/project-search?search='+$(this).find('input').val(),
+            type: 'POST',
+            dataType: 'JSON',
+            data: ({
+                'type': $(this).find('input[name="search-project"]').attr('id')
+            }),
+            success: function(data){
+                switch(data.status){
+                    case 'success':
+                        $('#table_body').html(data.content);
+                        break;
+                    case 'fail':
+                        break;
+                }
+            }
+        });
+
+    });
