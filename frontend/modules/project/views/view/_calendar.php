@@ -67,8 +67,13 @@ echo FullCalendar::widget([
                     var dateE = new Date(event.end._i);
                     var full_date_start = dateS.getDate()+"."+(dateE.getMonth() + 1)+"."+dateS.getFullYear();
                     var full_date_end = dateE.getDate()+"."+(dateE.getMonth() + 1)+"."+dateE.getFullYear();
-                    var full_date_end1 = (dateE.getDate())+"."+(dateE.getMonth() + 1)+"."+dateE.getFullYear();                 
+                    if(full_date_start == full_date_end){
+                        $("input[name=\'daterange\']").val(full_date_start + " - " + full_date_end);
+                    }else{
+                         var full_date_end1 = (dateE.getDate() - 1)+"."+(dateE.getMonth() + 1)+"."+dateE.getFullYear();                 
                     $("input[name=\'daterange\']").val(full_date_start + " - " + full_date_end1);
+                    }
+                   
                     if(full_date_start == full_date_end){
                         $("#db_date").html(full_date_start);                     
                     }else{
