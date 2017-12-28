@@ -20,6 +20,7 @@ class Project extends \yii\db\ActiveRecord
     public $domains_id;
     public $project_responsible_form_fio;
     public $project_responsible_form_phone;
+    public $project_responsible_form_email;
     public $project_responsible_form_company;
     public static function tableName()
     {

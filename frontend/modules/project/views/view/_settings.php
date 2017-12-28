@@ -44,9 +44,9 @@ use kartik\time\TimePicker;
     </select><br>
     <label for="">Сроки выполнения проекта</label><br>
 	    Начало:
-		<input type="text" name="startsDate" value="<?= Yii::$app->formatter->asDate($modelMain->date_start, 'M.d.yyyy') ?>"/>
+		<input type="text" name="startsDate" value="<?= Yii::$app->formatter->asDate($modelMain->date_start, 'd.M.yyyy') ?>"/>
 		Окончание:
-        <input type="text" name="endsDate" value="<?= Yii::$app->formatter->asDate($modelMain->date_end, 'M.d.yyyy') ?>"/>
+        <input type="text" name="endsDate" value="<?= Yii::$app->formatter->asDate($modelMain->date_end, 'd.M.yyyy') ?>"/>
         <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
         <!-- Include Date Range Picker -->
         <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>

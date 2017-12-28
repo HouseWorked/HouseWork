@@ -65,15 +65,18 @@ echo FullCalendar::widget([
                     // Получение даты задачи                                                  
                     var dateS = new Date(event.start._i);
                     var dateE = new Date(event.end._i);
-                    var full_date_start = dateS.getDate()+"."+(dateE.getMonth() + 1)+"."+dateS.getFullYear();
+                    var full_date_start = dateS.getDate()+"."+(dateS.getMonth() + 1)+"."+dateS.getFullYear();
                     var full_date_end = dateE.getDate()+"."+(dateE.getMonth() + 1)+"."+dateE.getFullYear();
+                    console.log(full_date_start+\' - \'+event.end._i);
+                    
                     if(full_date_start == full_date_end){
                         $("input[name=\'daterange\']").val(full_date_start + " - " + full_date_end);
                     }else{
-                         var full_date_end1 = (dateE.getDate() - 1)+"."+(dateE.getMonth() + 1)+"."+dateE.getFullYear();                 
-                    $("input[name=\'daterange\']").val(full_date_start + " - " + full_date_end1);
+                        var full_date_end1 = (dateE.getDate() - 1)+"."+(dateE.getMonth() + 1)+"."+dateE.getFullYear();                 
+                        $("input[name=\'daterange\']").val(full_date_start + " - " + full_date_end1);
                     }
-                   
+                    
+                    
                     if(full_date_start == full_date_end){
                         $("#db_date").html(full_date_start);                     
                     }else{

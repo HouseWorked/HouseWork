@@ -77,8 +77,8 @@ $("#close_windows").on("click", function(e) {
 
 /*  AJAX  */
     //Работа с окнами
-    $(document).on('click', '#back', function(){ // кнопка назад
-        var backType = $('#back_windows').data('type');
+    $(document).on('click', '#back_windows', function(){ // кнопка назад
+        var backType = $('#back_windows').attr('class');
         console.log(backType);
     });
     $(document).on('click', '.list', function(){ // Открытие главного окна
@@ -106,7 +106,7 @@ $("#close_windows").on("click", function(e) {
             }
         });
     });
-    $(document).on('click', '.select_left_menu', function(){// Открытие в главном окне (ри выборе в левом меню)
+    $(document).on('click', '.select_left_menu', function(){// Открытие окон в главном окне (при выборе в левом меню)
         var type = $(this).data('type');
         $.ajax({
             url: 'project/main/view?type='+type,
@@ -135,6 +135,7 @@ $("#close_windows").on("click", function(e) {
                 switch(data.status){
                     case 'success':
                         $('.ajax_windows_content').html(data.page);
+                        $('#back_windows').attr('class', 'backkkkkk');
                         break;
                     case 'fail':
                         break;
@@ -157,7 +158,6 @@ $("#close_windows").on("click", function(e) {
                 switch(data.status){
                     case 'success':
                         $('.text_windows_content').html(data.content);
-
                         break;
                     case 'fail':
                         break;

@@ -17,15 +17,78 @@ use app\helpers\FileHelper;
         var_dump(Yii::$app->user->can('developer'));
 
         ?>
+        <!-- Блоки с основной информацией-->
+        <div class="main_block_info">
+            <div class="current_task">
+                <div class="block_panel_name">curent taskname</div>
+                <div class="block_panel_content">current task content</div>
+            </div>
+            <div class="errors_log">
+                <div class="block_panel_name">errors log name</div>
+                <div class="block_panel_content">errors log content</div>
+            </div>
+            <div class="overdue_domains">
+                <div class="block_panel_name">overdue domains  name</div>
+                <div class="block_panel_content">overdue domains content</div>
+            </div>
+        </div>
         <div class="container_windows">
             <div class="windows_panel" style="background: grey;">
-                <div style="margin-left: 0" id="back_windows" data-type="">Назад</div>
+                <div style="margin-left: 0" id="back_windows" class="">Назад</div>
                 <div style="margin-left: 95%" id="close_windows">Закрыть</div>
             </div>
             <div class="content_windows" style="background: white">
 
             </div>
         </div>
+
+    <style>
+        .main_block_info{
+            position: absolute;
+            width: 450px;
+            top: 5px;
+            right: 5px;
+        }
+        .block_panel_name{
+            background: grey;
+        }
+        .current_task, .errors_log, .overdue_domains{
+            z-index: 1;
+            background: white;
+            margin-bottom: 10px;
+        }
+        .block_panel_content{
+            padding: 5px;
+        }
+        .main_menu_settings{
+            float: right;
+            background: red;
+            height: 100%;
+            width: 200px;
+        }
+        .time{
+            float: left;
+            background: green;
+            width: 60%;
+            height: 100%;
+        }
+        .alerts{
+            float: left;
+            background: white;
+            width: 80px;
+        }
+
+
+
+
+
+
+
+
+
+
+
+    </style>
     </div>
     <div class="footer">
         <div class="menu">
@@ -43,7 +106,7 @@ use app\helpers\FileHelper;
             </div>
             <div class="list-wrapper">
                 <div class="list" data-type="site">
-                    Сайты
+                    Управление сайтами
                 </div>
                 <div class="list" data-type="project">
                     Проекты
@@ -63,12 +126,23 @@ use app\helpers\FileHelper;
                 <div class="list" data-type="ad">
                     Рекламный блок
                 </div>
+                <div class="list" data-type="ad">
+                   Сообщения
+                </div>
             </div>
             <div class="search">
                 <input type="text" placeholder="seacrh..." name="search">
             </div>
         </div>
         <img src="images/menu.png" alt=",enu" width="40" height="40" style="margin-left: 5px" id="toggle_menu">
+        <div class="main_menu_settings">
+           <div class="alerts">
+<!--               <img src="images/static/alerts.png" alt="">-->
+           </div>
+            <div class="time">
+                time
+            </div>
+        </div>
     </div>
 </div>
 

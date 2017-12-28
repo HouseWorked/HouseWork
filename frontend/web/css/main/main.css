@@ -58,6 +58,7 @@ body{
     max-height: 60%;
     overflow-y: auto;
     overflow-x: hidden;
+    /*z-index: 1;*/
 }
 .menu {
     position: absolute;
@@ -66,6 +67,7 @@ body{
     margin-top: -450px;
     background: rgba(0,0,0, 0.7);
     border-bottom: 1px solid grey;
+    z-index: 1;
 }
 .panel{
     width: 55px;
