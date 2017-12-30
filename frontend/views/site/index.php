@@ -1,9 +1,6 @@
 <?php
 
-/* @var $this yii\web\View */
-
 $this->title = 'Панель управления(crm)';
-
 
 use yii\helpers\Url;
 use app\helpers\FileHelper;
@@ -11,38 +8,41 @@ use app\helpers\FileHelper;
 <div id="p_prldr"><div class="contpre"><span class="svg_anm"></span><br>Подождите<br><small>идет загрузка</small></div></div>
 <div class="wrapper">
     <div class="content">
-        <?php
-        var_dump(Yii::$app->user->can('project_manager'));
-        var_dump(Yii::$app->user->can('director'));
-        var_dump(Yii::$app->user->can('developer'));
-
-        ?>
+        
         <!-- Блоки с основной информацией-->
         <div class="main_block_info">
-            <div class="current_task">
-                <div class="block_panel_name">curent taskname</div>
+            <div class="widgets__view" id = "task_windows">
+                <div class="block_panel_name">curent taskname <span class = "swernut">Свернуть блок</span> </div>
                 <div class="block_panel_content">current task content</div>
             </div>
-            <div class="errors_log">
-                <div class="block_panel_name">errors log name</div>
+            <div class="widgets__view" id = "errors_windows">
+                <div class="block_panel_name">errors log name <span class = "swernut">Свернуть блок</span></div>
                 <div class="block_panel_content">errors log content</div>
             </div>
-            <div class="overdue_domains">
-                <div class="block_panel_name">overdue domains  name</div>
+            <div class="widgets__view" id = "domains_windows">
+                <div class="block_panel_name">overdue domains  name <span class = "swernut">Свернуть блок</span></div>
                 <div class="block_panel_content">overdue domains content</div>
             </div>
         </div>
         <div class="container_windows">
             <div class="windows_panel" style="background: grey;">
                 <div style="margin-left: 0" id="back_windows" class="">Назад</div>
+				<div style="margin-left: 88%" id="full_browser_windows">На весь экран</div>
                 <div style="margin-left: 95%" id="close_windows">Закрыть</div>
             </div>
+			<input type="hidden" value="" name="project_type">
             <div class="content_windows" style="background: white">
 
             </div>
         </div>
 
     <style>
+		.windows_full_screen{
+			max-width: 100%;
+			min-width: 99.9%;
+			/*min-height: 99.9%;
+			max-height: 100%;*/
+		}
         .main_block_info{
             position: absolute;
             width: 450px;
@@ -52,7 +52,7 @@ use app\helpers\FileHelper;
         .block_panel_name{
             background: grey;
         }
-        .current_task, .errors_log, .overdue_domains{
+		.widgets__view{
             z-index: 1;
             background: white;
             margin-bottom: 10px;
@@ -105,7 +105,7 @@ use app\helpers\FileHelper;
                 </div>
             </div>
             <div class="list-wrapper">
-                <div class="list" data-type="site">
+                <div class="list" data-type="cite">
                     Управление сайтами
                 </div>
                 <div class="list" data-type="project">
@@ -126,7 +126,7 @@ use app\helpers\FileHelper;
                 <div class="list" data-type="ad">
                     Рекламный блок
                 </div>
-                <div class="list" data-type="ad">
+                <div class="list" data-type="chat">
                    Сообщения
                 </div>
             </div>
@@ -138,6 +138,13 @@ use app\helpers\FileHelper;
         <div class="main_menu_settings">
            <div class="alerts">
 <!--               <img src="images/static/alerts.png" alt="">-->
+				<span id = "btn_open_img_group">button</span>
+				<div id = "img_main_block_info">
+					<ul>
+						<li class = "open_widgets" data-type = "task">1</li>
+						<li class = "open_widgets" data-type = "domains">2</li>
+					</ul>
+				</div>
            </div>
             <div class="time">
                 time
@@ -145,8 +152,21 @@ use app\helpers\FileHelper;
         </div>
     </div>
 </div>
+<style>
+.alerts{
+	position: relative;
+}
+#img_main_block_info {
+    position: absolute;
+    top: -90px;
+    background: beige;
+    padding: 10px;
+	display: none;
+}
+</style>
+<script>
 
-
+</script>
 <!-- Модалка -->
 <div id="text-popup-anim" class="zoom-anim-dialog white-popup mfp-hide" style="margin-top: -10%">
     <p style="text-align: right;"><a class="popup-modal-dismiss" href="#">Закрыть</a></p>
@@ -158,7 +178,12 @@ use app\helpers\FileHelper;
 
 
 
+<?php
+        var_dump(Yii::$app->user->can('project_manager'));
+        var_dump(Yii::$app->user->can('director'));
+        var_dump(Yii::$app->user->can('developer'));
 
+        ?>
 
 
 

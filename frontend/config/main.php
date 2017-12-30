@@ -15,6 +15,27 @@ return [
         'project' => [
             'class' => 'app\modules\project\Module',
         ],
+		'cite' => [
+            'class' => 'frontend\modules\cite\Module',
+        ],
+		'staff' => [
+            'class' => 'frontend\modules\staff\Module',
+        ],
+		'fin' => [
+            'class' => 'frontend\modules\fin\Module',
+        ],
+		'bid' => [
+            'class' => 'frontend\modules\bid\Module',
+        ],
+		'company' => [
+            'class' => 'frontend\modules\company\Module',
+        ],
+		'ad' => [
+            'class' => 'frontend\modules\ad\Module',
+        ],
+		'chat' => [
+            'class' => 'frontend\modules\chat\Module',
+        ],
     ],
     'components' => [
         'request' => [

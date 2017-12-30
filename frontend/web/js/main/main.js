@@ -14,6 +14,30 @@ $(document).ready(function(){
     });
     // $(".container_windows").resizable();
 });
+//Работа меню. Правой части!
+$(document).on('click', '#btn_open_img_group', function(){ // Открытие блока с виджетами
+	$('#img_main_block_info').css('display', 'block');
+	$('#btn_open_img_group').addClass('close_block');
+});
+$(document).on('click', '.close_block', function(){ // Закрытие блока с виджетами
+	$('#img_main_block_info').css('display', 'none');
+	$('#btn_open_img_group').removeClass('close_block');
+});
+$(document).on('click', '.swernut', function(){ // Закрытие виджетами  и перевод его в блок в меню!!!
+	$(this).parent().parent().hide();
+});
+$(document).on('click', '.open_widgets', function(){ // Закрытие виджетами  и перевод его в блок в меню!!!
+	var type = $(this).data('type');
+	switch(type){
+		case "task":
+			$('#task_windows').show();
+			break;
+		case "domains":
+			$('#domains_windows').show();
+			break;
+			
+	}
+});
 
 //Настройки рабочего стола
 $('.footer').css('margin-top', $(window).height() - 40); // Пуск
@@ -50,7 +74,8 @@ $(document).on('click', '#toggle_menu', function(){
     $('.menu').toggle();
 });
 $(document).on('click', '.content', function(){
-    $('.menu').hide();
+    $('.menu').hide(); // Закрытие меню
+    $('#img_main_block_info').hide(); // Закрытие блока с виджетами
 });
 // end
 
@@ -78,8 +103,40 @@ $("#close_windows").on("click", function(e) {
 /*  AJAX  */
     //Работа с окнами
     $(document).on('click', '#back_windows', function(){ // кнопка назад
+		var project_type = $('input[name="project_type"]').val(); 
         var backType = $('#back_windows').attr('class');
-        console.log(backType);
+        $.ajax({
+            url: project_type+'/main/index',
+            type: 'POST',
+            dataType: 'JSON',
+            data: ({
+                'type': project_type
+            }),
+            success: function(data){
+                switch(data.status){
+                    case 'success':
+						$('#back_windows').hide();
+                        $('.container_windows').show();
+                        $('.content_windows').html(data.page);
+                        $('.menu').hide();
+						$('input[name="project_type"]').val(project_type);
+                        break;
+                    case 'fail':
+                        break;
+                }
+            },
+            error: function(){
+                toastr.error('Файла нет');
+            }
+        });
+    });
+	$(document).on('click', '#full_browser_windows', function(){ // кнопка "На весь экран"
+		if($(this).is('windows_full_screen')){
+			console.log('full');
+		}
+		$(".container_windows").addClass("windows_full_screen");
+		$(".container_windows").css("min-height", $(window).height()-40);
+		$(".ajax_windows_content").css("min-height", $(window).height()-40);
     });
     $(document).on('click', '.list', function(){ // Открытие главного окна
         var type = $(this).data('type');
@@ -93,9 +150,11 @@ $("#close_windows").on("click", function(e) {
             success: function(data){
                 switch(data.status){
                     case 'success':
+						$('#back_windows').hide();
                         $('.container_windows').show();
                         $('.content_windows').html(data.page);
                         $('.menu').hide();
+						$('input[name="project_type"]').val(type);
                         break;
                     case 'fail':
                         break;
@@ -108,8 +167,9 @@ $("#close_windows").on("click", function(e) {
     });
     $(document).on('click', '.select_left_menu', function(){// Открытие окон в главном окне (при выборе в левом меню)
         var type = $(this).data('type');
+		var project_type = $('input[name="project_type"]').val(); 
         $.ajax({
-            url: 'project/main/view?type='+type,
+            url: project_type+'/main/view?type='+type,
             type: 'POST',
             dataType: 'JSON',
             success: function(data){
@@ -127,13 +187,15 @@ $("#close_windows").on("click", function(e) {
     $(document).off('click', '.select_element');// Открытие страницы с подробной информацией о элементе
     $(document).on('click', '.select_element', function(){
         var id = $(this).attr('id');
+		var project_type = $('input[name="project_type"]').val();
         $.ajax({
-            url: 'project/view/index?id='+id,
+            url: project_type+'/view/index?id='+id,
             type: 'POST',
             dataType: 'JSON',
             success: function(data){
                 switch(data.status){
                     case 'success':
+						$('#back_windows').show();
                         $('.ajax_windows_content').html(data.page);
                         $('#back_windows').attr('class', 'backkkkkk');
                         break;
@@ -147,8 +209,9 @@ $("#close_windows").on("click", function(e) {
     $(document).on('click', '.view_element', function(){
         var id = $(this).attr('id');
         var type = $(this).data('type');
+		var project_type = $('input[name="project_type"]').val();
         $.ajax({
-            url: 'project/view/'+type,
+            url: project_type+'/view/'+type,
             type: 'POST',
             dataType: 'JSON',
             data: ({
