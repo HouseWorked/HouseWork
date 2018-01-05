@@ -2,7 +2,7 @@
      Молодцы, давайте дальше так тащить!!!!!
 <?php else:?>
     <?php foreach($errors as $key => $error): ?>
-        <div class="string_errors_content">
+        <div class="string_errors_content" id="<?= $error->id ?>">
             <?= ($key+1).". ".$error->title ?>
 			Обнаружил ошибку - <?= $error->creator->username?>
 			В <?= Yii::$app->formatter->asDate($error->create_at, 'd.M.yyyy')?>

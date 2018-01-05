@@ -4,8 +4,6 @@ $(document).ready(function(){
         type: 'inline',
         removalDelay: 300,
         mainClass: 'my-mfp-zoom-in',
-        preloader: false,
-        modal: true
     });
     // Draggable
     $(".container_windows").draggable({
@@ -130,13 +128,21 @@ $("#close_windows").on("click", function(e) {
             }
         });
     });
-	$(document).on('click', '#full_browser_windows', function(){ // кнопка "На весь экран"
-		if($(this).is('windows_full_screen')){
-			console.log('full');
-		}
+    $(document).on('click', '#full_browser_windows', function(){ // кнопка перехода в режим "На весь экран"
 		$(".container_windows").addClass("windows_full_screen");
+		$(".container_windows").css("top", 0);
+		$(".container_windows").css("left", 0);
 		$(".container_windows").css("min-height", $(window).height()-40);
 		$(".ajax_windows_content").css("min-height", $(window).height()-40);
+		$('#full_browser_windows').addClass('full_browser_exit');
+		$('#full_browser_windows').html('Не на весь экран');
+    });
+    $(document).on('click', '.full_browser_exit', function(){ // кнопка выхода из режима "На весь экран"
+        $(".container_windows").removeClass("windows_full_screen");
+        $(".container_windows").css("min-height", '400px');
+        $(".ajax_windows_content").css("min-height", '550px');
+        $('#full_browser_windows').removeClass('full_browser_exit');
+        $('#full_browser_windows').html('на весь экран');
     });
     $(document).on('click', '.list', function(){ // Открытие главного окна
         var type = $(this).data('type');

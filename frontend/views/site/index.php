@@ -40,8 +40,6 @@ use app\helpers\FileHelper;
 		.windows_full_screen{
 			max-width: 100%;
 			min-width: 99.9%;
-			/*min-height: 99.9%;
-			max-height: 100%;*/
 		}
         .main_block_info{
             position: absolute;
@@ -164,12 +162,9 @@ use app\helpers\FileHelper;
 	display: none;
 }
 </style>
-<script>
-
-</script>
 <!-- Модалка -->
 <div id="text-popup-anim" class="zoom-anim-dialog white-popup mfp-hide" style="margin-top: -10%">
-    <p style="text-align: right;"><a class="popup-modal-dismiss" href="#">Закрыть</a></p>
+<!--    <p style="text-align: right;"><a class="popup-modal-dismiss" href="#">Закрыть</a></p>-->
     <h3>Диалоговое окно</h3>
     <p>You won't be able to dismiss this by usual means (escape or
         click button), but you can close it programatically based on

@@ -26,12 +26,30 @@ echo FullCalendar::widget([
         'unselectAuto' => true,
         'editable' => true,
         'droppable' => true,
-        'select' => new \yii\web\JsExpression("function (start, end, allDay) { // добавление задачи
+        'select' => new \yii\web\JsExpression("function (start, end, allDay) { // добавление задачи      
+                var testDate = true;
                 var dateStart = new Date(start._d);
                 var dateEnds = new Date(end._d);
-                var fullDateStart = dateStart.getFullYear()+'-'+(dateStart.getMonth() + 1)+'-'+dateStart.getDate();
+                var dateCurrent = new Date();
+                var fullDateStart = dateStart.getFullYear()+'-'+(dateStart.getMonth() + 1)+'-'+dateStart.getDate();              
                 var fullDateEnds = dateEnds.getFullYear()+'-'+(dateEnds.getMonth() + 1)+'-'+(dateEnds.getDate() - 1);
-                $('#overlay').fadeIn(400,
+                if(dateStart.getFullYear() >= dateCurrent.getFullYear()){ // проверка на прошлый год
+                    testDate = true;
+                     if((dateStart.getMonth() + 1) >= (dateCurrent.getMonth() + 1)){
+                        testDate = true;
+                        if(dateStart.getDate() >= dateCurrent.getDate()){
+                            testDate = true;
+                        }else{
+                            testDate = false; // если день меньше текущего
+                        }
+                     }else{
+                        testDate = false; // если месяц меньше текущего
+                     }
+                }else{
+                   testDate = false; // если год меньше текущего
+                }
+               if(testDate){
+                    $('#overlay').fadeIn(400,
                     function(){
                         $('#modal_form')
                             .css('display', 'block')
@@ -40,14 +58,12 @@ echo FullCalendar::widget([
                     $('#task-title_task').val('');
                     $('#task-description').val('');
                     $('input[name=\"starts\"]').val(fullDateStart);
-                    $('input[name=\"ends\"]').val(fullDateEnds);                
+                    $('input[name=\"ends\"]').val(fullDateEnds);       
+               }
+                        
             }"),
         'eventClick' => new \yii\web\JsExpression(' //редактирование задачи
-                function(event) {
-                    var eve = event;
-                    $("#title_task_edit").focusout(function(){
-                       console.log(eve+" - this events");
-                    });
+                function(event) {                                   
                     $(\'#overlay\').fadeIn(400,
                     function(){
                         $(\'#modal_form_edit\')
@@ -67,15 +83,16 @@ echo FullCalendar::widget([
                     var dateE = new Date(event.end._i);
                     var full_date_start = dateS.getDate()+"."+(dateS.getMonth() + 1)+"."+dateS.getFullYear();
                     var full_date_end = dateE.getDate()+"."+(dateE.getMonth() + 1)+"."+dateE.getFullYear();
-                    console.log(full_date_start+\' - \'+event.end._i);
                     
+                    
+                    var myEndsDate = new Date(event.myDate);  // плагин fullcalendar работает не правильно!! Приходиться мудрить с датой=((
+                    var myFulldate = myEndsDate.getDate()+"."+(myEndsDate.getMonth()+1)+"."+myEndsDate.getFullYear()
                     if(full_date_start == full_date_end){
-                        $("input[name=\'daterange\']").val(full_date_start + " - " + full_date_end);
+                        $("input[name=\'daterange\']").val(full_date_start + " - " + myFulldate);
                     }else{
                         var full_date_end1 = (dateE.getDate() - 1)+"."+(dateE.getMonth() + 1)+"."+dateE.getFullYear();                 
-                        $("input[name=\'daterange\']").val(full_date_start + " - " + full_date_end1);
-                    }
-                    
+                        $("input[name=\'daterange\']").val(full_date_start + " - " + myFulldate);
+                    }                 
                     
                     if(full_date_start == full_date_end){
                         $("#db_date").html(full_date_start);                     
@@ -89,17 +106,20 @@ echo FullCalendar::widget([
                         type: "post",
                         dataType: "JSON",
                         data: ({
+                            "project_id": $(\'input[name="main_project_id"]\').val(),
                             "task_id": event.id
                         }),
                         success: function(data){
                             switch(data.status){
                                 case "success":
+                                    $("#task_info_container").html(data.contentInfo);
                                     $(".comment_container").html(data.content);
                                     $("input[name=\'id\']").val(data.id);
                                     break;
                             }
                         }                  
                     });
+                   
                     $(\'input[name="new_start_date"]\').val(event.start._i);
                     $(\'input[name="new_ends_date"]\').val(event.end._i);                                    
                 }
@@ -170,17 +190,14 @@ echo FullCalendar::widget([
     <?php $form = ActiveForm::begin(); ?>
     <div class="head">
         <input type="text" name="daterange" value="" id="daterange_edit"/>
-        <input type="hidden" value="" name="id">
-        <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-        <!-- Include Date Range Picker -->
-        <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
-        <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+        <input type="hidden" value="" name="id"> <!-- поля для хранения id задачи -->
         <script type="text/javascript">
             $(document).ready(function(){
                 $('input[name="daterange"]').daterangepicker({
                     "showWeekNumbers": true,
                     "timePicker": true,
                     "timePicker24Hour": true,
+                    "timePickerIncrement": 30,
                     "locale": {
                         "format": "DD.MM.YYYY",
                         "separator": " - ",
@@ -188,7 +205,6 @@ echo FullCalendar::widget([
                         "cancelLabel": "Отмена",
                         "fromLabel": "From",
                         "toLabel": "To",
-                        "timePickerIncrement": 5,
                         "customRangeLabel": "Custom",
                         "weekLabel": "W",
                         "daysOfWeek": [
@@ -217,13 +233,10 @@ echo FullCalendar::widget([
                         "firstDay": 1
                     },
                     "opens": "left"
-                }, function(start , end, label) {
-                    var hourse_left = ($('.left').find('.hourselect').val() < 10) ? "0"+$('.left').find('.hourselect').val() : $('.left').find('.hourselect').val();
-                    var hourse_right = ($('.right').find('.hourselect').val() < 10) ? "0"+$('.right').find('.hourselect').val() : $('.right').find('.hourselect').val();
-                    var minute_left = ($('.left').find('.minuteselect').val() < 10) ? "0"+$('.left').find('.minuteselect').val() : $('.left').find('.minuteselect').val();
-                    var minute_right = ($('.right').find('.minuteselect').val() < 10) ? "0"+$('.right').find('.minuteselect').val() : $('.right').find('.minuteselect').val();
-                    var new_start_date = start.format('YYYY-MM-DD') + " " + hourse_left + ":" + minute_left + ":" + "00";
-                    var new_ends_date = end.format('YYYY-MM-DD') + " " + hourse_right + ":" + minute_right + ":" + "00";
+                }, function(start , end, ranges) {
+                    var new_start_date = start.format('YYYY-MM-DD H:m:s');
+                    var new_ends_date = end.format('YYYY-MM-DD H:m:s');
+
                     $.ajax({
                         url: 'project/view/task?type=edit',
                         dataType: 'json',
@@ -290,9 +303,8 @@ echo FullCalendar::widget([
             </select>
         </span>
     </div>
-    <div class="container">
-        <input type="text" value="Название задачи" name="title_task_edit" id="title_task_edit">
-        <input type="text" value="Описание задачи" name="desc_task_edit" id="desc_task_edit">
+    <div class="container" id="task_info_container">
+        Контент с инфой о задачи
     </div>
     <div class="comment">
         <div class="comment_container">

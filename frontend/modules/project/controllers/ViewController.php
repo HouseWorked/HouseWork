@@ -9,6 +9,7 @@ use app\models\Task;
 use app\models\User;
 use app\models\Comment;
 use app\models\ErrorProject;
+use app\models\ScreenErrors;
 use app\models\Teem;
 use app\models\Domains;
 use client\modules\domain\models\Domain;
@@ -59,13 +60,12 @@ class ViewController extends Controller
         $model = new Task();
 
         // Массив с исполнителям
-        $teem = User::find()->where(['id' => yii::$app->user->id])->one();
-        $user = User::find()->where(['teem_id' => $teem->teem->id])->all();
-        foreach ($user as $index => $item) {
+        $teem = ProjectTeem::find()->where(['project_id' => yii::$app->request->post('id')])->all();
+        foreach ($teem as $index => $item) {
             $performer[] = [
-                'id' => $item->id,
-                'username' => $item->username,
-                'group' => $item->prof->title
+                'id' => $item->user->id,
+                'username' => $item->user->username,
+                'group' => $item->user->prof->title
             ];
         }
         //Работа с календраем
@@ -109,12 +109,26 @@ class ViewController extends Controller
                     $id = yii::$app->request->post('task_id');
                     $comments = Comment::find()->where(['task_id' => $id])->all();
                     $task = Task::find()->where(['id' => $id])->one();
+                    // Массив с исполнителям
+                    $teem = ProjectTeem::find()->where(['project_id' => yii::$app->request->post('project_id')])->all();
+                    foreach ($teem as $index => $item) {
+                        $performers[] = [
+                            'id' => $item->user->id,
+                            'username' => $item->user->username,
+                            'group' => $item->user->prof->title
+                        ];
+                    }
                     return  json_encode([
                         'status' => 'success',
                         'id' => $id,
                         'content' => $this->renderAjax('include/modal', [
                             'comments' => $comments,
                             'type' => 'all',
+                        ]),
+                        'contentInfo' =>$this->renderAjax('include/TaskInfoContent', [
+                            'task_info' => $task,
+                            'performer' => $performers,
+                            'model' => $model
                         ])
                     ]);
                     break;
@@ -128,6 +142,7 @@ class ViewController extends Controller
                         $task->type = yii::$app->request->post('importance');
                         $task->title_task = yii::$app->request->post('title');
                         $task->description = yii::$app->request->post('desc');
+                        $task->user_id = yii::$app->request->post('performer');
                     }
                     $task->save();
                     break;
@@ -144,11 +159,12 @@ class ViewController extends Controller
             $Event->id = $task->id;
             $Event->title = $task->title_task;
             $Event->desc = $task->description;
-            $Event->type = $task->type;
+            $Event->type = $task->type; // Добавить при необходимости
+            $Event->myDate = $Event->start = date('Y-m-d H:i:s', strtotime($task->ends)); // Добавить при необходимости
             if($task->status == 1){
                 $Event->className = 'ok';
             }else{
-                $Event->className = ($start < $current && $task->status == 0)? 'overdue' : $task->type;
+                $Event->className = ($ends < $current && $task->status == 0)? 'overdue' : $task->type;
             }
             $Event->start = date('Y-m-d H:i:s', strtotime($task->start));
             $Event->end = ($start !== $ends) ? date('Y-m-d H:i:s', strtotime('+1 day', strtotime($task->ends))) : date('Y-m-d H:i:s', strtotime($task->ends));
@@ -310,6 +326,15 @@ class ViewController extends Controller
         return json_encode([
             'status' => 'success',
             'content' => 'good'
+        ]);
+    }
+    public function actionModalErrorContent(){
+        $screens = ScreenErrors::find()->where(['errors_id' => yii::$app->request->post('error_id')])->all();
+        return json_encode([
+            'status' => 'success',
+            'content' => $this->renderAjax('include/modalContent_for_errors', [
+                'screens' => $screens
+            ])
         ]);
     }
 }

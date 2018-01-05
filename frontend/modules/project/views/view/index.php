@@ -7,6 +7,7 @@
         <div class="links view_element" data-type="tech"><a href="#">ТЗ</a></div>
         <div class="links view_element" data-type="settings"><a href="#">Настройки</a></div>
         <div class="links view_element" data-type="task"><a href="#">Задачи</a></div>
+        <div class="links view_element" data-type="task"><a href="#">Правки к проекту</a></div>
         <div class="links view_element" data-type="errors"><a href="#">Лог ошибок</a></div>
     </ul>
     <input type="hidden" value="<?= $id ?>" name="main_project_id">

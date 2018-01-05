@@ -20,13 +20,15 @@ $(document).on('click', '#modal_close, #overlay', function(){ //закрытие
                         'id_project': $('input[name="id"]').val(),
                         'title': $('input[name="title_task_edit"]').val(),
                         'desc': $('input[name="desc_task_edit"]').val(),
-
+                        'performer': $('select[name="select_new_performer"]').val(),
                         'importance': $('select[name="importance"]').val()
                     }),
                     type: 'POST',
                     success: function(data){
                         switch(data.status){
                             case 'success':
+                                console.log($('input[name="st"]').val());
+                                console.log($('input[name="ed"]').val());
                                 $('.text_windows_content').html(data.content); // Обновление календаря
                                 break;
                         }

@@ -20,6 +20,7 @@ class ProjectAsset extends AssetBundle
         '//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js',
         'js/project/settings.js',
         'js/project/calendar.js',
+        'js/project/errors.js',
     ];
     public $depends = [
         'yii\bootstrap\BootstrapAsset',
