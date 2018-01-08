@@ -137,14 +137,21 @@ echo FullCalendar::widget([
                     'style' => 'width: 400px; margin-top: 10px'
                 ]
         ]); ?>
-        <?= $form->field($model, 'user_id')->widget(Select2::classname(), [
-                'data' => ArrayHelper::map($users, 'id', 'username', 'group'),
-                'language' => 'ru',
-                'options' => ['placeholder' => 'Выбирете исполнителя ...', ],
-                'pluginOptions' => [
-                    'allowClear' => true,
-            ],
-        ])->label(false);?>
+		
+        <?php
+			if(!empty($users)){
+				echo $form->field($model, 'user_id')->widget(Select2::classname(), [
+					'data' => ArrayHelper::map($users, 'id', 'username', 'group'),
+					'language' => 'ru',
+					'options' => ['placeholder' => 'Выбирете исполнителя ...', ],
+					'pluginOptions' => [
+						'allowClear' => true,
+						],
+					])->label(false);
+			}else{
+				echo "На данный проект люди не назначены";
+			}
+			?>
         <?= $form->field($model, 'title_task')->textInput(['placeholder' => 'Название задачи'])->label(false); ?>
         <?= $form->field($model, 'description')->textarea(['placeholder' => 'Описание задачи', 'style' => 'max-width: 400px; min-height: 50px; max-height: 115px'])->label(false); ?>
         <div class="errors_block"></div> <!-- Вывод ошибок -->

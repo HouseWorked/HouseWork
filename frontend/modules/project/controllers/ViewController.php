@@ -328,7 +328,7 @@ class ViewController extends Controller
             'content' => 'good'
         ]);
     }
-    public function actionModalErrorContent(){
+    public function actionModalErrorContent(){// Заполнение контента модального окна скринами ошибок
         $screens = ScreenErrors::find()->where(['errors_id' => yii::$app->request->post('error_id')])->all();
         return json_encode([
             'status' => 'success',

@@ -13,11 +13,34 @@ use app\helpers\FileHelper;
         <div class="main_block_info">
             <div class="widgets__view" id = "task_windows">
                 <div class="block_panel_name">curent taskname <span class = "swernut">Свернуть блок</span> </div>
-                <div class="block_panel_content">current task content</div>
+				<?php if(!empty($tasks)):?>
+					<?php foreach($tasks as $task): ?>
+						<?php if($task->status == 0):?>
+							<?php if(yii::$app->formatter->asDate($task->ends, 'Y-MM-dd') <= yii::$app->formatter->asDate(time(), 'Y-MM-dd')):?>
+							<div class="block_panel_content"><?= $task->title_task ?> - просроченные</div>
+							<?php endif;?>
+						<?php endif;?>
+					<?php endforeach; ?>
+					<?php foreach($tasks as $task): ?>
+						<?php if($task->status == 0):?>
+							<?php if(yii::$app->formatter->asDate($task->ends, 'Y-MM-dd') >= yii::$app->formatter->asDate(time(), 'Y-MM-dd')):?>
+							<div class="block_panel_content"><?= $task->title_task ?> - текущие</div>
+							<?php endif;?>
+						<?php endif;?>
+					<?php endforeach; ?>
+				<?php else:?>
+					На данный момент задач нет
+				<?php endif;?>
             </div>
             <div class="widgets__view" id = "errors_windows">
                 <div class="block_panel_name">errors log name <span class = "swernut">Свернуть блок</span></div>
-                <div class="block_panel_content">errors log content</div>
+                <?php if(!empty($errors)):?>
+					<?php foreach($errors as $error): ?>
+						<div class="block_panel_content"><?= $error['title'] ?> - error</div>
+					<?php endforeach; ?>
+				<?php else: ?>
+					Ошибок нет! Так держать!!!!
+				<?php endif;?>
             </div>
             <div class="widgets__view" id = "domains_windows">
                 <div class="block_panel_name">overdue domains  name <span class = "swernut">Свернуть блок</span></div>
@@ -51,6 +74,8 @@ use app\helpers\FileHelper;
             background: grey;
         }
 		.widgets__view{
+			max-height: 200px;
+			overflow-y: scroll;
             z-index: 1;
             background: white;
             margin-bottom: 10px;

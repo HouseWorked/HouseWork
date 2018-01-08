@@ -42,6 +42,15 @@ use kartik\time\TimePicker;
         <option value="5" <?= ($modelMain->type == 5) ? 'selected' : "" ?> >Дизайн</option>
         <option value="6" <?= ($modelMain->type == 6) ? 'selected' : "" ?> >Реклама</option>
     </select><br>
+	<label for="">Выберите стадию проекта</label><br>
+    <select name="select_type_project" id="">
+        <option value="1" <?= ($modelMain->type == 1) ? 'selected' : "" ?> >Создание сайтов</option>
+        <option value="2" <?= ($modelMain->type == 2) ? 'selected' : "" ?> >Поддержка</option>
+        <option value="3" <?= ($modelMain->type == 3) ? 'selected' : "" ?> >SEO продвижение</option>
+        <option value="4" <?= ($modelMain->type == 4) ? 'selected' : "" ?> >Крупный проект</option>
+        <option value="5" <?= ($modelMain->type == 5) ? 'selected' : "" ?> >Дизайн</option>
+        <option value="6" <?= ($modelMain->type == 6) ? 'selected' : "" ?> >Реклама</option>
+    </select><br>
     <label for="">Сроки выполнения проекта</label><br>
 	    Начало:
 		<input type="text" name="startsDate" value="<?= Yii::$app->formatter->asDate($modelMain->date_start, 'd.M.yyyy') ?>"/>

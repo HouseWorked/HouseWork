@@ -9,6 +9,7 @@
         <div class="links view_element" data-type="task"><a href="#">Задачи</a></div>
         <div class="links view_element" data-type="task"><a href="#">Правки к проекту</a></div>
         <div class="links view_element" data-type="errors"><a href="#">Лог ошибок</a></div>
+        <div class="links view_element" data-type="errors"><a href="#">Чек - лист</a></div>
     </ul>
     <input type="hidden" value="<?= $id ?>" name="main_project_id">
     <div class="text_windows_content">
