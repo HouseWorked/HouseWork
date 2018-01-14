@@ -21,9 +21,10 @@ class User extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['username', 'auth_key', 'password_hash', 'email', 'created_at', 'updated_at', 'role_id'], 'required'],
-            [['status', 'created_at', 'updated_at', 'teem_id', 'proff_id'], 'integer'],
-            [['username', 'password_hash', 'password_reset_token', 'email'], 'string', 'max' => 255],
+            //[['username', 'auth_key', 'password_hash', 'email', 'created_at', 'updated_at', 'role_id'], 'required'],
+            [['auth_key', 'created_at', 'updated_at', 'role_id'], 'required'],
+            [['status', 'created_at', 'updated_at', 'teem_id', 'proff_id', 'phone'], 'integer'],
+            [['username', 'password_hash', 'password_reset_token', 'email', 'vk', 'skype', 'odnoklassniki', 'facebook', 'instagram'], 'string', 'max' => 255],
             [['auth_key'], 'string', 'max' => 32],
             [['username'], 'unique'],
             [['email'], 'unique'],

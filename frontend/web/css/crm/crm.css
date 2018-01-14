@@ -1,0 +1,9 @@
+#edit_data{
+	width: 60%;
+    float: left;
+}
+#edit_info{
+	border: 1px solid blueviolet;
+    float: left;
+    width: 38%;
+}

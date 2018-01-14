@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\modules\ad\controllers;
+namespace frontend\modules\chat\controllers;
 
 use yii\web\Controller;
 

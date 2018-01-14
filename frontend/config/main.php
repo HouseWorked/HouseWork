@@ -36,6 +36,9 @@ return [
 		'chat' => [
             'class' => 'frontend\modules\chat\Module',
         ],
+		'crm' => [
+            'class' => 'frontend\modules\crm\Module',
+        ],
     ],
     'components' => [
         'request' => [

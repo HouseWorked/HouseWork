@@ -97,6 +97,9 @@ use app\helpers\FileHelper;
                 <div class="list" data-type="chat">
                    Сообщения
                 </div>
+				<div class="list" data-type="crm">
+                   Настройки CRM
+                </div>
             </div>
             <div class="search">
                 <input type="text" placeholder="seacrh..." name="search">
