@@ -22,6 +22,7 @@ class Project extends \yii\db\ActiveRecord
     public $project_responsible_form_phone;
     public $project_responsible_form_email;
     public $project_responsible_form_company;
+    public $user_id;
     public static function tableName()
     {
         return 'pr_project';
@@ -33,6 +34,7 @@ class Project extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['title', 'date_start', 'date_end', 'stage_id', 'performer_id', 'type', 'company_id'], 'required'],
             [['date_start', 'date_end'], 'safe'],
             [['title'], 'string', 'max' => 100],
         ];

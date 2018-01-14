@@ -5,12 +5,11 @@ $(document).ready(function(){
         removalDelay: 300,
         mainClass: 'my-mfp-zoom-in',
     });
-    // Draggable
+    //Draggable
     $(".container_windows").draggable({
         containment: 'parent',
-        cancel: '.text_windows_content'
+        cancel: '.text_windows_content, #block_resize'
     });
-    // $(".container_windows").resizable();
 });
 //Работа меню. Правой части!
 $(document).on('click', '#btn_open_img_group', function(){ // Открытие блока с виджетами
@@ -136,6 +135,7 @@ $("#close_windows").on("click", function(e) {
 		$(".ajax_windows_content").css("min-height", $(window).height()-40);
 		$('#full_browser_windows').addClass('full_browser_exit');
 		$('#full_browser_windows').html('Не на весь экран');
+		$('#block_resize').hide();
     });
     $(document).on('click', '.full_browser_exit', function(){ // кнопка выхода из режима "На весь экран"
         $(".container_windows").removeClass("windows_full_screen");
@@ -143,6 +143,7 @@ $("#close_windows").on("click", function(e) {
         $(".ajax_windows_content").css("min-height", '550px');
         $('#full_browser_windows').removeClass('full_browser_exit');
         $('#full_browser_windows').html('на весь экран');
+        $('#block_resize').show();
     });
     $(document).on('click', '.list', function(){ // Открытие главного окна
         var type = $(this).data('type');
@@ -183,8 +184,10 @@ $("#close_windows").on("click", function(e) {
                     case 'success':
                         $('.text_windows_content').html(data.content);
                         $('.search').find('input[name="search-project"]').attr('id', data.type);
+                        $('#add_new_project').attr('data-type', type);
                         break;
                     case 'fail':
+
                         break;
                 }
             }

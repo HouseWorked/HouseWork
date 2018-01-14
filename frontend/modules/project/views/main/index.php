@@ -3,42 +3,23 @@
 ?>
 <div class="ajax_windows_content" style="min-height: 600px">
     <ul id="accordion" class="accordion">
-        <li>
-            <div class="link"><i class="fa fa-database"></i>Веб-роекты<i class="fa fa-chevron-down"></i></div>
-            <ul class="submenu">
-                <li class="select_left_menu" data-type="1"><a href="#">Создание сайтов</a></li>
-                <li class="select_left_menu" data-type="2"><a href="#">Поддержка</a></li>
-                <li class="select_left_menu" data-type="3"><a href="#">SEO продвижение</a></li>
-                <!-- <li class="select_left_menu" data-type="4"><a href="#">Крупный проект</a></li> -->
-                <li class="select_left_menu" data-type="5"><a href="#">Дизайн</a></li>
-                <li class="select_left_menu" data-type="6"><a href="#">Реклама</a></li>
-            </ul>
-        </li>
-        <li>
-            <div class="link"><i class="fa fa-database"></i>Мобильные приложения<i class="fa fa-chevron-down"></i></div>
-            <ul class="submenu">
-                <li class="select_left_menu" data-type="1"><a href="#">Игры</a></li>
-                <li class="select_left_menu" data-type="2"><a href="#">Приложения</a></li>
-                <li class="select_left_menu" data-type="3"><a href="#">Поддержка</a></li>
-            </ul>
-        </li>
-        <li>
-            <div class="link"><i class="fa fa-database"></i>ПО<i class="fa fa-chevron-down"></i></div>
-            <ul class="submenu">
-                <li class="select_left_menu" data-type="1"><a href="#"></a></li>
-                <li class="select_left_menu" data-type="2"><a href="#">Приложения</a></li>
-                <li class="select_left_menu" data-type="3"><a href="#">Поддержка</a></li>
-            </ul>
-        </li>
-        <li>
-            <div class="link"><i class="fa fa-database"></i>Тексты<i class="fa fa-chevron-down"></i></div>
-            <ul class="submenu">
-                <li class="select_left_menu" data-type="1"><a href="#">Написание статей</a></li>
-            </ul>
-        </li>
+        <?php foreach($menu as $menu_item): ?>
+            <?php if($menu_item->parents === null): ?>
+                <li> <!-- пункт меню -->
+                    <div class="link"><i class="fa fa-database"></i><?=  $menu_item->title ?><i class="fa fa-chevron-down"></i></div><!-- Название пункта меню -->
+                    <?php if($menu_item->getChildrens($menu_item->id)): ?><!-- Подпункт меню -->
+                        <ul class="submenu">
+                            <?php foreach($menu_item->getChildrens($menu_item->id) as $menu_children_item): ?>
+                                <li class="select_left_menu" data-type="<?= $menu_children_item->id ?>"><a href="#"><?= $menu_children_item->title ?></a></li>
+                            <?php endforeach;?>
+                        </ul>
+                    <?php endif; ?>
+                </li>
+            <?php endif; ?>
+        <?php endforeach;?>
     </ul>
     <div class="text_windows_content">
-        menu
+        В данном разделе вы можете управлять и следить за выполнением проектов
     </div>
 </div>
 <script>

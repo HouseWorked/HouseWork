@@ -23,7 +23,6 @@ use kartik\time\TimePicker;
 	В базе свободных доменов нет... Добавить новый? <br>
 	<?php endif; ?>
     <label for="">Данные о компании</label>
-
     <?php if($modelMain->company === null): ?>
         <p>Добавить компанию??? или выбрать из существующих</p>
     <?php else:  ?>
@@ -33,23 +32,21 @@ use kartik\time\TimePicker;
         <?= $form->field($modelMain, 'project_responsible_form_company')->textInput(['value' => $modelMain->company->title])->label(false); ?>
         <input type="hidden" value="<?= $modelMain->company->id ?>" name="company_id"> <!-- id компании -->
     <?php endif; ?>
-    <label for="">Выберите тип проекта</label><br>
-    <select name="select_type_project" id="">
-        <option value="1" <?= ($modelMain->type == 1) ? 'selected' : "" ?> >Создание сайтов</option>
-        <option value="2" <?= ($modelMain->type == 2) ? 'selected' : "" ?> >Поддержка</option>
-        <option value="3" <?= ($modelMain->type == 3) ? 'selected' : "" ?> >SEO продвижение</option>
-        <option value="4" <?= ($modelMain->type == 4) ? 'selected' : "" ?> >Крупный проект</option>
-        <option value="5" <?= ($modelMain->type == 5) ? 'selected' : "" ?> >Дизайн</option>
-        <option value="6" <?= ($modelMain->type == 6) ? 'selected' : "" ?> >Реклама</option>
-    </select><br>
+<!--    <label for="">Выберите тип проекта</label><br>-->
+<!--    <select name="select_type_project" id="">-->
+<!--        <option value="1" --><?//= ($modelMain->type == 1) ? 'selected' : "" ?><!-- >Создание сайтов</option>-->
+<!--        <option value="2" --><?//= ($modelMain->type == 2) ? 'selected' : "" ?><!-- >Поддержка</option>-->
+<!--        <option value="3" --><?//= ($modelMain->type == 3) ? 'selected' : "" ?><!-- >SEO продвижение</option>-->
+<!--        <option value="4" --><?//= ($modelMain->type == 4) ? 'selected' : "" ?><!-- >Крупный проект</option>-->
+<!--        <option value="5" --><?//= ($modelMain->type == 5) ? 'selected' : "" ?><!-- >Дизайн</option>-->
+<!--        <option value="6" --><?//= ($modelMain->type == 6) ? 'selected' : "" ?><!-- >Реклама</option>-->
+<!--    </select><br>-->
 	<label for="">Выберите стадию проекта</label><br>
-    <select name="select_type_project" id="">
-        <option value="1" <?= ($modelMain->type == 1) ? 'selected' : "" ?> >Создание сайтов</option>
-        <option value="2" <?= ($modelMain->type == 2) ? 'selected' : "" ?> >Поддержка</option>
-        <option value="3" <?= ($modelMain->type == 3) ? 'selected' : "" ?> >SEO продвижение</option>
-        <option value="4" <?= ($modelMain->type == 4) ? 'selected' : "" ?> >Крупный проект</option>
-        <option value="5" <?= ($modelMain->type == 5) ? 'selected' : "" ?> >Дизайн</option>
-        <option value="6" <?= ($modelMain->type == 6) ? 'selected' : "" ?> >Реклама</option>
+    <select name="select_stage_project" id="">
+        <option value="1" <?= ($modelMain->stage_id == 1) ? 'selected' : "" ?> >Начальная</option>
+        <option value="2" <?= ($modelMain->stage_id == 2) ? 'selected' : "" ?> >ВТорая</option>
+        <option value="3" <?= ($modelMain->stage_id == 3) ? 'selected' : "" ?> >Третья</option>
+        <option value="4" <?= ($modelMain->stage_id == 4) ? 'selected' : "" ?> >4</option>
     </select><br>
     <label for="">Сроки выполнения проекта</label><br>
 	    Начало:
@@ -145,3 +142,4 @@ use kartik\time\TimePicker;
 	<br>
 	<?= Html::button('Сохранить', ['class' => 'btn btn-success send_update_settings_project']) ?>
 <?php ActiveForm::end() ?>
+

@@ -8,9 +8,6 @@
     background: grey;
 }
 /*виды задач*/
-.fullcalendar .ok{ /*Выполненая задача*/
-    background: grey;
-}
 .fullcalendar .overdue {/*Просроченная задача*/
     background: yellow;
 }
@@ -29,7 +26,61 @@
 /*                end             */
 /************************************/
 
+/*errors*/
+/*стили шалереи*/
+.gallery-box{
+    /*width:600px;*/
+    /*padding:25px 0 0;*/
+    margin:0;
+}
+.view{
+    position:relative;
+    margin:0 0 5px;
+}
+.big-image img{
+    display:block;
+    width:900px;
+    height:600px;
+    max-height:601px;
+}
+.prev, .next{
+    position:absolute;
+    width:40px;
+    height:40px;
+    color: #fff;
+}
+.prev{
+    bottom:20px;
+    left:20px;
+}
+.next{
+    bottom:20px;
+    right:20px;
+}
 
+.thumbnails{
+    width:605px;
+    display: none;
+}
+.thumbnails a{
+    float:left;
+    margin:0 5px 0 0;
+}
+.thumbnails a img{
+    width:142px;
+    height:80px;
+    border: 2px solid transparent;
+    display:block;
+}
+.thumbnails .active img{
+    border-color:#069;
+}
+
+.string_errors_content{
+    width: 100%;
+}
+/*                end             */
+/************************************/
 /*Разберись с этим пжлст. Ненужное убери))*/
 #qw li{
     display: inline-block;

@@ -52,10 +52,12 @@ body{
     position: absolute;
 }
 .container_windows{
-    min-width: 60%;
-    max-width: 80%;
-    min-height: 50%;
-    max-height: 60%;
+    width: 1000px;
+    height: 500px;
+    /*min-width: 60%;*/
+    max-width: 96%;
+    /*min-height: 50%;*/
+    max-height: 90%;
     overflow-y: auto;
     overflow-x: hidden;
     /*z-index: 1;*/
@@ -253,3 +255,75 @@ h1 a {
 }
 /*                end             */
 /************************************/
+.fullcalendar .ok{ /*Выполненая задача*/
+    background: grey;
+    text-decoration: line-through;
+}
+/**
+ * Виджеты главного окна
+ -----------------------------*/
+.windows_full_screen{
+    max-width: 100%;
+    min-width: 99.9%;
+}
+.main_block_info{
+    position: absolute;
+    width: 450px;
+    top: 5px;
+    right: 5px;
+}
+.block_panel_name{
+    background: grey;
+}
+.widgets__view{
+    max-height: 200px;
+    overflow-y: scroll;
+    z-index: 1;
+    background: white;
+    margin-bottom: 10px;
+}
+.block_panel_content{
+    padding: 5px;
+}
+.main_menu_settings{
+    float: right;
+    background: red;
+    height: 100%;
+    width: 200px;
+}
+.time{
+    float: left;
+    background: green;
+    width: 60%;
+    height: 100%;
+}
+.alerts{
+    float: left;
+    background: white;
+    width: 80px;
+}
+.bottom_button_add{
+    background: green;
+    color: white;
+}
+/*Кнопки на панели "пуск*/
+.alerts{
+    position: relative;
+}
+#img_main_block_info {
+    position: absolute;
+    top: -90px;
+    background: beige;
+    padding: 10px;
+    display: none;
+}
+#block_resize {
+    background-color: #000;
+    bottom: 0;
+    cursor: se-resize;
+    height: 12px;
+    margin-top: 9px;
+    position: absolute;
+    right: 0;
+    width: 12px;
+}

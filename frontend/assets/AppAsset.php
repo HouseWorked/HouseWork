@@ -23,6 +23,7 @@ class AppAsset extends AssetBundle
         'js/popup/jquery.magnific-popup.js',
         'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
         'js/main/screenfull.js',
+        'js/main/resizeble.js',
         'js/main/main.js',
         'plugins/toastr/toastr.js',
     ];

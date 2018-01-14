@@ -31,25 +31,3 @@ use yii\widgets\ActiveForm;
 	<?php endif;?>
     <?= Html::button('Добавить', ['class' => 'btn btn-success send_new_teem_chlen']) ?>
 <?php ActiveForm::end(); ?>
-<script>
-$(document).off('click', '.send_new_teem_chlen');
-$(document).on('click', '.send_new_teem_chlen', function(e){
-	var id = $('#user_id').data('value');
-    $.ajax({
-		url: 'project/view/teem',
-		type: 'POST',
-		dataType: 'JSON',
-		data: ({
-			'id': $('input[name="main_project_id"]').val(),
-			'user_id': id,
-		}),
-		success: function(data){
-			switch(data.status){
-				case "success":	
-					$('.text_windows_content').html(data.content);
-					break;
-			}
-		}
-	});
-});
-</script>

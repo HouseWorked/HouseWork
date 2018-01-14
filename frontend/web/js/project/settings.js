@@ -4,14 +4,14 @@ $(document).on('click', '.send_update_settings_project', function(){
     var new_date_start = $('input[name="startsDate"]').val(); // Начало
     var new_date_ends = $('input[name="endsDate"]').val(); // Конец
     var domain_id = $('#project-domains_id').val(); //домены
-    var project_type = $('select[name="select_type_project"]').val(); // тип проекта
+    // var project_type = $('select[name="select_type_project"]').val(); // тип проекта
+    var project_stage = $('select[name="select_stage_project"]').val(); // тип проекта
     // Данные компнаии
     var id_company = $('input[name="company_id"]').val(); // ID привязанной компании
     var responsible_name = $('#project-project_responsible_form_fio').val(); // ФИО ответственного
     var responsible_phone = $('#project-project_responsible_form_phone').val(); // номер телефона ответственного
     var responsible_email = $('#project-project_responsible_form_email').val(); // email ответственного
     var name_company = $('#project-project_responsible_form_company').val(); // Название компании
-    console.log(new_date_start + " > " + new_date_ends);
 
     $.ajax({
         url: 'project/view/save-settings',
@@ -27,8 +27,9 @@ $(document).on('click', '.send_update_settings_project', function(){
             'responsible_phone': responsible_phone,
             'name_company': name_company,
             'responsible_email': responsible_email,
-            'project_type': project_type,
-            'id_company': id_company
+            // 'project_type': project_type,
+            'id_company': id_company,
+            'project_stage': project_stage
         }),
         success: function(data){
             switch(data.status){

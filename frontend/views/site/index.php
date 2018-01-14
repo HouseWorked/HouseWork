@@ -1,5 +1,4 @@
 <?php
-
 $this->title = 'Панель управления(crm)';
 
 use yii\helpers\Url;
@@ -8,7 +7,6 @@ use app\helpers\FileHelper;
 <div id="p_prldr"><div class="contpre"><span class="svg_anm"></span><br>Подождите<br><small>идет загрузка</small></div></div>
 <div class="wrapper">
     <div class="content">
-        
         <!-- Блоки с основной информацией-->
         <div class="main_block_info">
             <div class="widgets__view" id = "task_windows">
@@ -41,13 +39,14 @@ use app\helpers\FileHelper;
 				<?php else: ?>
 					Ошибок нет! Так держать!!!!
 				<?php endif;?>
+                <div class="bottom_button_add">Нашел ошибку в проекте? Скорее пиши, не подводи команду!</div>
             </div>
             <div class="widgets__view" id = "domains_windows">
                 <div class="block_panel_name">overdue domains  name <span class = "swernut">Свернуть блок</span></div>
                 <div class="block_panel_content">overdue domains content</div>
             </div>
         </div>
-        <div class="container_windows">
+        <div class="container_windows" id="block">
             <div class="windows_panel" style="background: grey;">
                 <div style="margin-left: 0" id="back_windows" class="">Назад</div>
 				<div style="margin-left: 88%" id="full_browser_windows">На весь экран</div>
@@ -55,63 +54,9 @@ use app\helpers\FileHelper;
             </div>
 			<input type="hidden" value="" name="project_type">
             <div class="content_windows" style="background: white">
-
             </div>
+            <div id="block_resize"></div>
         </div>
-
-    <style>
-		.windows_full_screen{
-			max-width: 100%;
-			min-width: 99.9%;
-		}
-        .main_block_info{
-            position: absolute;
-            width: 450px;
-            top: 5px;
-            right: 5px;
-        }
-        .block_panel_name{
-            background: grey;
-        }
-		.widgets__view{
-			max-height: 200px;
-			overflow-y: scroll;
-            z-index: 1;
-            background: white;
-            margin-bottom: 10px;
-        }
-        .block_panel_content{
-            padding: 5px;
-        }
-        .main_menu_settings{
-            float: right;
-            background: red;
-            height: 100%;
-            width: 200px;
-        }
-        .time{
-            float: left;
-            background: green;
-            width: 60%;
-            height: 100%;
-        }
-        .alerts{
-            float: left;
-            background: white;
-            width: 80px;
-        }
-
-
-
-
-
-
-
-
-
-
-
-    </style>
     </div>
     <div class="footer">
         <div class="menu">
@@ -175,18 +120,6 @@ use app\helpers\FileHelper;
         </div>
     </div>
 </div>
-<style>
-.alerts{
-	position: relative;
-}
-#img_main_block_info {
-    position: absolute;
-    top: -90px;
-    background: beige;
-    padding: 10px;
-	display: none;
-}
-</style>
 <!-- Модалка -->
 <div id="text-popup-anim" class="zoom-anim-dialog white-popup mfp-hide" style="margin-top: -10%">
 <!--    <p style="text-align: right;"><a class="popup-modal-dismiss" href="#">Закрыть</a></p>-->
@@ -195,7 +128,6 @@ use app\helpers\FileHelper;
         click button), but you can close it programatically based on
         user choices or actions.</p>
 </div>
-
 
 
 <?php

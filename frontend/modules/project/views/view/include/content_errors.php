@@ -9,8 +9,3 @@
         </div>
     <?php endforeach;?>
 <?php endif; ?>
-<style>
-    .string_errors_content{
-        width: 100%;
-    }
-</style>

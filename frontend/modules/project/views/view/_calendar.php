@@ -130,7 +130,7 @@ echo FullCalendar::widget([
 <!-- окно добавления задачи -->
 <div id="modal_form"><!-- Сaмo oкнo -->
     <span id="modal_close">X</span> <!-- Кнoпкa зaкрыть -->
-    <div class="container">
+    <div class="content_add_new_task">
         <?php $form = ActiveForm::begin([
                 'options' => [
                     'class' => 'form_project_add',
@@ -310,6 +310,9 @@ echo FullCalendar::widget([
             </select>
         </span>
     </div>
+    <span id="complete_task">Выполнена</span>
+    <span id="freeze_task">Заморозит задачу</span>
+    <span id="delete_task">Удалить задачу</span>
     <div class="container" id="task_info_container">
         Контент с инфой о задачи
     </div>

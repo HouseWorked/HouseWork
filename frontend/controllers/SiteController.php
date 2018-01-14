@@ -68,7 +68,7 @@ class SiteController extends Controller
 		foreach($project_user as $user){
 			switch($user->user->prof->title){
 				case "Программист":
-					$proff = 'prog';
+					$proff = 'programming';
 					break;
 				case "Дизайнер":
 					$proff = 'design';

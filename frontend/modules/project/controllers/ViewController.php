@@ -11,6 +11,7 @@ use app\models\Comment;
 use app\models\ErrorProject;
 use app\models\ScreenErrors;
 use app\models\Teem;
+use app\models\ProjectStage;
 use app\models\Domains;
 use client\modules\domain\models\Domain;
 use yii;
@@ -71,6 +72,12 @@ class ViewController extends Controller
         //Работа с календраем
         if($type !== null){
             switch($type){
+                case "complete": //Задача выполнена
+                    $id = yii::$app->request->post('task_id');
+                    $task = Task::find()->where(['id' => $id])->one();
+                    $task->status = 1;
+                    $task->save();
+                    break;
                 case "add": //Добавления новой задачи
                     $model->title_task = yii::$app->request->post('title');
                     $model->description = yii::$app->request->post('desc');
@@ -83,12 +90,22 @@ class ViewController extends Controller
                     $model->status = 0;
                     $model->save();
                     break;
+                case "delete": //Добавления новой задачи
+                    $id = yii::$app->request->post('task_id');
+                    $comments = Comment::find()->where(['task_id' => $id])->all();
+                    $task = Task::find()->where(['id' => $id])->one();
+                    foreach ($comments as $index => $comment) {
+                        $comment->delete();
+                    }
+                    $task->delete();
+                    break;
                 case 'send': //Отправка комментария
                     $id = yii::$app->request->post('task_id');
                     $comments = new Comment();
                     $comments->text = yii::$app->request->post('text');
                     $comments->task_id = $id;
                     $comments->creator_id = yii::$app->user->id;
+                    $comments->create_at = yii::$app->formatter->asDate(time(), 'Y-M-dd H:i:s');
                     $comments->save();
                     $lastNewCommentID = yii::$app->db->lastInsertID;
                     if($comments->save()){
@@ -201,7 +218,7 @@ class ViewController extends Controller
             'content' => $this->renderAjax('_settings', [
                 'modelDomains' => $domains,
                 'modelMain' => $modelMain,
-                'currentDomain' => $modelDomainValue
+                'currentDomain' => $modelDomainValue,
             ])
         ]);
     }
@@ -295,6 +312,13 @@ class ViewController extends Controller
             ])
         ]);
     }
+    public function actionDeleteComment($id){ // Получение списка ошибок в зависимости от полученного типа задачи
+        $comment = Comment::find()->where(['id' => $id])->one();
+        $comment->delete();
+        return json_encode([
+            'status' => 'success',
+        ]);
+    }
     public function actionSaveSettings(){ // Получение списка ошибок в зависимости от полученного типа задачи
         // Сохранение нового имени проекта и основной информации о проекте
         if(yii::$app->formatter->asDate(yii::$app->request->post('new_date_start'), 'Y-M-dd H:i:s') > yii::$app->formatter->asDate(yii::$app->request->post('new_date_ends'), 'Y-M-dd H:i:s')){
@@ -303,26 +327,44 @@ class ViewController extends Controller
                 'content' => 'Выбран не правильный диапазон времени'
             ]);
         }
-        $project_name = Project::find()->where(['id' => yii::$app->request->post('project_id')])->one();
-        $project_name->title = yii::$app->request->post('name_project');
-        $project_name->type = yii::$app->request->post('project_type');
-        $project_name->date_start = yii::$app->formatter->asDate(yii::$app->request->post('new_date_start'), 'Y-M-dd H:i:s');
-        $project_name->date_end = yii::$app->formatter->asDate(yii::$app->request->post('new_date_ends'), 'Y-M-dd H:i:s');
-        $project_name->save();
+        if(!empty(yii::$app->request->post('project_id'))){
+            $project_name = Project::find()->where(['id' => yii::$app->request->post('project_id')])->one();
+            $project_name->title = yii::$app->request->post('name_project');
+//            $project_name->type = yii::$app->request->post('project_type');
+            $project_name->stage_id = yii::$app->request->post('project_stage');
+            $project_name->date_start = yii::$app->formatter->asDate(yii::$app->request->post('new_date_start'), 'Y-M-dd H:i:s');
+            $project_name->date_end = yii::$app->formatter->asDate(yii::$app->request->post('new_date_ends'), 'Y-M-dd H:i:s');
+            $project_name->save();
+        }
+
         // Сохранение домена
-        $deleteDomainsForProject = Domains::find()->where(['project_id' => yii::$app->request->post('project_id')])->one(); // Отвязываем домен
-        $deleteDomainsForProject->project_id = null;
-        $deleteDomainsForProject->save();
-        $domain = Domains::find()->where(['id' => yii::$app->request->post('domain_id')])->one(); //Привязываем домен
-        $domain->project_id = yii::$app->request->post('project_id');
-        $domain->save();
+//        if(!empty(yii::$app->request->post('project_id'))){
+//            $deleteDomainsForProject = Domains::find()->where(['project_id' => yii::$app->request->post('project_id')])->one(); // Отвязываем домен
+//            $deleteDomainsForProject->project_id = NULL;
+//            $deleteDomainsForProject->save();
+//        }
+        if(!empty(yii::$app->request->post('domain_id')) && yii::$app->request->post('domain_id') != ""){
+            $domain = Domains::find()->where(['id' => yii::$app->request->post('domain_id')])->one(); //Привязываем домен
+            $domain->project_id = yii::$app->request->post('project_id');
+            $domain->save();
+        }else{
+            $domain = Domains::find()->where(['project_id' => yii::$app->request->post('project_id')])->one(); //Привязываем домен
+            if($domain){
+                $domain->project_id = null;
+                $domain->save();
+            }
+
+        }
         // Сохранение данных о компании и ответственного
-        $company = Company::find()->where(['id' => yii::$app->request->post('id_company')])->one();
-        $company->title = yii::$app->request->post('name_company');
-        $company->firstname = yii::$app->request->post('responsible_name');
-        $company->phone = yii::$app->request->post('responsible_phone');
-        $company->email = yii::$app->request->post('responsible_email');
-        $company->save();
+        if(!empty(yii::$app->request->post('id_company'))){
+            $company = Company::find()->where(['id' => yii::$app->request->post('id_company')])->one();
+            $company->title = yii::$app->request->post('name_company');
+            $company->firstname = yii::$app->request->post('responsible_name');
+            $company->phone = yii::$app->request->post('responsible_phone');
+            $company->email = yii::$app->request->post('responsible_email');
+            $company->save();
+        }
+
         return json_encode([
             'status' => 'success',
             'content' => 'good'
@@ -330,10 +372,18 @@ class ViewController extends Controller
     }
     public function actionModalErrorContent(){// Заполнение контента модального окна скринами ошибок
         $screens = ScreenErrors::find()->where(['errors_id' => yii::$app->request->post('error_id')])->all();
+        $screen = ScreenErrors::find()->where(['errors_id' => yii::$app->request->post('error_id')])->one();
+        if(empty($screens)){
+            return json_encode([
+                'status' => 'fail',
+                'content' => 'К этой ошибке скринщот не добавлен'
+            ]);
+        }
         return json_encode([
             'status' => 'success',
             'content' => $this->renderAjax('include/modalContent_for_errors', [
-                'screens' => $screens
+                'screens' => $screens,
+                'screen' => $screen
             ])
         ]);
     }
